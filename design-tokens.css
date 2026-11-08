@@ -1,0 +1,39 @@
+/* 전 페이지 공통 디자인 기준. 값 변경은 이 파일에서 진행합니다. */
+:root {
+  --background: #fbf9f4;
+  --low: #f5f3ee;
+  --surface: #ffffff;
+  --hover-surface: #eae8e3;
+  --primary: #141a19;
+  --text: #1b1c19;
+  --ink: #434846;
+  --secondary: #655d53;
+  --action: #182a38;
+  --accent: #9c8974;
+  --line: #c3c7c5;
+  --divider: #e4e2dd;
+  --card-border: #e5dfd5;
+  --secondary-container: #ede1d4;
+  --on-secondary-container: #6b6359;
+
+  /* 본문·한글: Pretendard / 영문 라벨·강조 숫자: Plus Jakarta Sans. */
+  --font-family: 'Pretendard', 'Malgun Gothic', sans-serif;
+  --font-family-accent: 'Plus Jakarta Sans', 'Pretendard', sans-serif;
+  --font-size-label: 11px;
+  --font-size-small: 13px;
+  --font-size-body: 15px;
+  --font-size-lead: 18px;
+  --font-size-heading-sm: 20px;
+  --font-size-heading-md: 24px;
+  --font-size-heading-mobile: 28px;
+  --font-size-heading: 40px;
+  --font-size-display: 56px;
+
+  --content-width: 1280px;
+  --header-height: 80px;
+  --page-margin-desktop: 64px;
+  --page-margin-tablet: 32px;
+  --page-margin-mobile: 20px;
+  --section-space: 72px;
+  --section-space-mobile: 52px;
+}

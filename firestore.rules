@@ -1,0 +1,66 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function text(value, maxLength) {
+      return value is string && value.size() <= maxLength;
+    }
+    function requiredText(value, maxLength) {
+      return text(value, maxLength) && value.matches('.*[^\\s].*');
+    }
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.uid == 'cOLPnjEzpgXYKdowCJcsKIf4xP73'
+        && request.auth.token.email == 'kingdom2765@naver.com'
+        && request.auth.token.email_verified == true
+        && request.auth.token.admin == true;
+    }
+    match /estimate_requests/{requestId} {
+      allow create: if requestId.matches('^[a-f0-9-]{36}$')
+        && request.resource.data.keys().hasAll([
+          'requestId', 'clinicName', 'contactName', 'phone', 'address', 'clinicType',
+          'area', 'frequency', 'changeConsultation', 'message', 'privacyConsent',
+          'privacyVersion', 'status', 'createdAt', 'expiresAt'
+        ])
+        && request.resource.data.keys().hasOnly([
+          'requestId', 'clinicName', 'contactName', 'phone', 'address', 'clinicType',
+          'area', 'frequency', 'changeConsultation', 'message', 'privacyConsent',
+          'privacyVersion', 'status', 'createdAt', 'expiresAt'
+        ])
+        && request.resource.data.requestId == requestId
+        && requiredText(request.resource.data.clinicName, 80)
+        && requiredText(request.resource.data.contactName, 60)
+        && request.resource.data.phone is string
+        && request.resource.data.phone.matches('^0[0-9]{8,10}$')
+        && requiredText(request.resource.data.address, 200)
+        && request.resource.data.clinicType in [
+          '피부과 / 성형외과', '내과 / 이비인후과', '안과 / 치과',
+          '정형외과 / 재활', '여성 / 한방병원', '기타 특수 클리닉'
+        ]
+        && text(request.resource.data.area, 40)
+        && request.resource.data.frequency in [
+          '주 5회 (월~금)', '주 6회', '주 3회', '주 2회', '주 1회',
+          '방문 주기 상담 후 결정', '일회성 청소'
+        ]
+        && request.resource.data.changeConsultation is bool
+        && text(request.resource.data.message, 2000)
+        && request.resource.data.privacyConsent == true
+        && request.resource.data.privacyVersion == '2026-11-09'
+        && request.resource.data.status == 'new'
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.expiresAt is timestamp
+        && request.resource.data.expiresAt >= request.time + duration.value(90, 'd') - duration.value(10, 'm')
+        && request.resource.data.expiresAt <= request.time + duration.value(90, 'd') + duration.value(10, 'm');
+      allow read, delete: if isAdmin();
+      allow update: if isAdmin()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'adminNotes', 'updatedAt', 'updatedBy'])
+        && request.resource.data.status in ['new', 'consulting', 'quoted', 'contracted', 'closed']
+        && text(request.resource.data.adminNotes, 5000)
+        && request.resource.data.updatedAt == request.time
+        && request.resource.data.updatedBy == request.auth.uid;
+    }
+    // Existing collections and any unlisted paths remain inaccessible to web clients.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

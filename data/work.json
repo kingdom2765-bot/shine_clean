@@ -1,0 +1,450 @@
+{
+  "clients": [
+    {
+      "id": "SC-001",
+      "name": "이*의원",
+      "region": "서울 마포구",
+      "specialty": "내과"
+    },
+    {
+      "id": "SC-002",
+      "name": "생*병원",
+      "region": "서울 강남구",
+      "specialty": "피부과"
+    },
+    {
+      "id": "SC-003",
+      "name": "수*의원",
+      "region": "서울 성동구",
+      "specialty": "정형외과"
+    },
+    {
+      "id": "SC-004",
+      "name": "바*병원",
+      "region": "서울 송파구",
+      "specialty": "치과"
+    },
+    {
+      "id": "SC-005",
+      "name": "온*의원",
+      "region": "경기 고양시",
+      "specialty": "내과"
+    },
+    {
+      "id": "SC-006",
+      "name": "정*의원",
+      "region": "경기 화성시",
+      "specialty": "내과"
+    },
+    {
+      "id": "SC-007",
+      "name": "휴*의원",
+      "region": "서울 송파구",
+      "specialty": "내과"
+    },
+    {
+      "id": "SC-008",
+      "name": "나*병원",
+      "region": "서울 영등포구",
+      "specialty": "피부과"
+    },
+    {
+      "id": "SC-009",
+      "name": "늘*의원",
+      "region": "서울 서초구",
+      "specialty": "정형외과"
+    },
+    {
+      "id": "SC-010",
+      "name": "휴*의원",
+      "region": "서울 강서구",
+      "specialty": "성형외과"
+    },
+    {
+      "id": "SC-011",
+      "name": "온*의원",
+      "region": "서울 서초구",
+      "specialty": "성형외과"
+    },
+    {
+      "id": "SC-012",
+      "name": "다*의원",
+      "region": "서울 강남구",
+      "specialty": "피부과"
+    },
+    {
+      "id": "SC-013",
+      "name": "바*병원",
+      "region": "경기 하남시",
+      "specialty": "피부과"
+    },
+    {
+      "id": "SC-014",
+      "name": "더*의원",
+      "region": "경기 안양시",
+      "specialty": "성형외과"
+    },
+    {
+      "id": "SC-015",
+      "name": "생*병원",
+      "region": "경기 용인시",
+      "specialty": "정형외과"
+    },
+    {
+      "id": "SC-016",
+      "name": "정*의원",
+      "region": "경기 수원시",
+      "specialty": "안과"
+    },
+    {
+      "id": "SC-017",
+      "name": "연*의원",
+      "region": "서울 강남구",
+      "specialty": "안과"
+    },
+    {
+      "id": "SC-018",
+      "name": "늘*의원",
+      "region": "서울 영등포구",
+      "specialty": "피부과"
+    },
+    {
+      "id": "SC-019",
+      "name": "연*의원",
+      "region": "서울 마포구",
+      "specialty": "내과"
+    },
+    {
+      "id": "SC-020",
+      "name": "참*의원",
+      "region": "서울 영등포구",
+      "specialty": "안과"
+    },
+    {
+      "id": "SC-021",
+      "name": "한*의원",
+      "region": "경기 하남시",
+      "specialty": "안과"
+    },
+    {
+      "id": "SC-022",
+      "name": "이*의원",
+      "region": "서울 강남구",
+      "specialty": "안과"
+    },
+    {
+      "id": "SC-023",
+      "name": "라*의원",
+      "region": "경기 안양시",
+      "specialty": "정형외과"
+    },
+    {
+      "id": "SC-024",
+      "name": "온*의원",
+      "region": "서울 영등포구",
+      "specialty": "안과"
+    },
+    {
+      "id": "SC-025",
+      "name": "라*의원",
+      "region": "경기 성남시",
+      "specialty": "치과"
+    },
+    {
+      "id": "SC-026",
+      "name": "청*의원",
+      "region": "서울 성동구",
+      "specialty": "성형외과"
+    },
+    {
+      "id": "SC-027",
+      "name": "다*의원",
+      "region": "서울 마포구",
+      "specialty": "치과"
+    },
+    {
+      "id": "SC-028",
+      "name": "빛*의원",
+      "region": "경기 성남시",
+      "specialty": "내과"
+    },
+    {
+      "id": "SC-029",
+      "name": "서*병원",
+      "region": "경기 수원시",
+      "specialty": "피부과"
+    },
+    {
+      "id": "SC-030",
+      "name": "빛*의원",
+      "region": "경기 안양시",
+      "specialty": "성형외과"
+    },
+    {
+      "id": "SC-031",
+      "name": "봄*의원",
+      "region": "서울 송파구",
+      "specialty": "치과"
+    },
+    {
+      "id": "SC-032",
+      "name": "늘*의원",
+      "region": "경기 고양시",
+      "specialty": "치과"
+    },
+    {
+      "id": "SC-033",
+      "name": "더*의원",
+      "region": "서울 강동구",
+      "specialty": "안과"
+    },
+    {
+      "id": "SC-034",
+      "name": "이*의원",
+      "region": "경기 용인시",
+      "specialty": "성형외과"
+    },
+    {
+      "id": "SC-035",
+      "name": "참*의원",
+      "region": "서울 서초구",
+      "specialty": "성형외과"
+    },
+    {
+      "id": "SC-036",
+      "name": "미*병원",
+      "region": "서울 강동구",
+      "specialty": "피부과"
+    },
+    {
+      "id": "SC-037",
+      "name": "미*병원",
+      "region": "경기 성남시",
+      "specialty": "치과"
+    },
+    {
+      "id": "SC-038",
+      "name": "봄*의원",
+      "region": "서울 강서구",
+      "specialty": "정형외과"
+    },
+    {
+      "id": "SC-039",
+      "name": "연*의원",
+      "region": "경기 용인시",
+      "specialty": "성형외과"
+    },
+    {
+      "id": "SC-040",
+      "name": "수*의원",
+      "region": "경기 화성시",
+      "specialty": "치과"
+    },
+    {
+      "id": "SC-041",
+      "name": "라*의원",
+      "region": "서울 강동구",
+      "specialty": "피부과"
+    },
+    {
+      "id": "SC-042",
+      "name": "청*의원",
+      "region": "경기 수원시",
+      "specialty": "안과"
+    },
+    {
+      "id": "SC-043",
+      "name": "수*의원",
+      "region": "경기 수원시",
+      "specialty": "피부과"
+    },
+    {
+      "id": "SC-044",
+      "name": "나*병원",
+      "region": "서울 서초구",
+      "specialty": "정형외과"
+    },
+    {
+      "id": "SC-045",
+      "name": "정*의원",
+      "region": "서울 성동구",
+      "specialty": "성형외과"
+    },
+    {
+      "id": "SC-046",
+      "name": "한*의원",
+      "region": "서울 송파구",
+      "specialty": "내과"
+    },
+    {
+      "id": "SC-047",
+      "name": "더*의원",
+      "region": "경기 성남시",
+      "specialty": "내과"
+    },
+    {
+      "id": "SC-048",
+      "name": "다*의원",
+      "region": "경기 용인시",
+      "specialty": "정형외과"
+    },
+    {
+      "id": "SC-049",
+      "name": "빛*의원",
+      "region": "서울 강동구",
+      "specialty": "안과"
+    },
+    {
+      "id": "SC-050",
+      "name": "서*병원",
+      "region": "서울 성동구",
+      "specialty": "정형외과"
+    },
+    {
+      "id": "SC-051",
+      "name": "바*병원",
+      "region": "서울 강서구",
+      "specialty": "정형외과"
+    },
+    {
+      "id": "SC-052",
+      "name": "나*병원",
+      "region": "경기 고양시",
+      "specialty": "치과"
+    },
+    {
+      "id": "SC-053",
+      "name": "서*병원",
+      "region": "경기 화성시",
+      "specialty": "치과"
+    },
+    {
+      "id": "SC-054",
+      "name": "생*병원",
+      "region": "서울 마포구",
+      "specialty": "치과"
+    },
+    {
+      "id": "SC-055",
+      "name": "한*의원",
+      "region": "서울 강서구",
+      "specialty": "성형외과"
+    },
+    {
+      "id": "SC-056",
+      "name": "미*병원",
+      "region": "경기 안양시",
+      "specialty": "정형외과"
+    },
+    {
+      "id": "SC-057",
+      "name": "참*의원",
+      "region": "경기 고양시",
+      "specialty": "내과"
+    },
+    {
+      "id": "SC-058",
+      "name": "휴*의원",
+      "region": "경기 하남시",
+      "specialty": "안과"
+    },
+    {
+      "id": "SC-059",
+      "name": "봄*의원",
+      "region": "경기 하남시",
+      "specialty": "피부과"
+    },
+    {
+      "id": "SC-060",
+      "name": "청*의원",
+      "region": "경기 화성시",
+      "specialty": "내과"
+    }
+  ],
+  "cases": [
+    {
+      "id": "CASE 01",
+      "title": "대기실 소파와 바닥, 첫인상을 위한 관리",
+      "region": "서울 강남구",
+      "specialty": "피부과",
+      "area": "대기실 · 접수대",
+      "image": "assets/p1/area-1.jpg",
+      "description": "대기석 주변의 바닥과 접수대 고접촉면, 소파 틈새를 확인하는 관리 기록 예시입니다.",
+      "tasks": [
+        "대기 소파 틈새와 하부 먼지 관리",
+        "접수대 표면과 손잡이 정돈",
+        "바닥 오염 확인 및 마감 점검"
+      ]
+    },
+    {
+      "id": "CASE 02",
+      "title": "차분한 진료를 위한 상담공간 정돈",
+      "region": "서울 서초구",
+      "specialty": "성형외과",
+      "area": "상담실 · 진료실",
+      "image": "assets/p1/area-2.jpg",
+      "description": "상담 데스크와 의자 주변, 진료실 동선을 정돈하는 작업 기록 예시입니다.",
+      "tasks": [
+        "데스크 상판과 의자 주변 정돈",
+        "책상 하부와 접근 가능한 배선 주변 점검",
+        "진료실 바닥 마감 상태 확인"
+      ]
+    },
+    {
+      "id": "CASE 03",
+      "title": "이동 동선을 따라 이어지는 공용부 관리",
+      "region": "경기 성남시",
+      "specialty": "정형외과",
+      "area": "복도 · 공용공간",
+      "image": "assets/p1/area-3.jpg",
+      "description": "환자와 의료진의 이동이 많은 복도와 공용부를 관리하는 기록 예시입니다.",
+      "tasks": [
+        "복도와 출입구 바닥 먼지 제거",
+        "공용부 고접촉면 관리",
+        "통행 구간 물기 및 잔여물 확인"
+      ]
+    },
+    {
+      "id": "CASE 04",
+      "title": "구역별 도구로 구분하는 화장실 케어",
+      "region": "서울 송파구",
+      "specialty": "치과",
+      "area": "원내 화장실",
+      "image": "assets/p1/area-4.jpg",
+      "description": "화장실 전용 도구를 사용해 세면대와 바닥을 관리하는 작업 기록 예시입니다.",
+      "tasks": [
+        "세면대 물때와 표면 오염 관리",
+        "화장실 전용 도구 구분",
+        "바닥 물기와 소모품 주변 정돈"
+      ]
+    },
+    {
+      "id": "CASE 05",
+      "title": "장비 주변의 접근 가능한 공간까지",
+      "region": "경기 수원시",
+      "specialty": "안과",
+      "area": "장비 주변",
+      "image": "assets/p1/area-5.jpg",
+      "description": "사전 협의한 의료장비 외곽의 접근 가능한 바닥을 점검하는 기록 예시입니다. 장비 내부 분해나 전문 멸균은 포함하지 않습니다.",
+      "tasks": [
+        "사전 협의한 작업 한계선 확인",
+        "장비 외곽 바닥 먼지 관리",
+        "작업 후 주변 동선 확인"
+      ]
+    },
+    {
+      "id": "CASE 06",
+      "title": "진료 시작 전, 대기공간 마무리 점검",
+      "region": "경기 고양시",
+      "specialty": "내과",
+      "area": "대기실 · 공용공간",
+      "image": "assets/clinic-lobby.jpg",
+      "description": "대기공간의 청결 상태와 환자 동선을 마무리 확인하는 작업 기록 예시입니다.",
+      "tasks": [
+        "대기석 주변 정돈",
+        "주요 이동 동선 상태 확인",
+        "청소 도구 회수와 마감 점검"
+      ]
+    }
+  ]
+}

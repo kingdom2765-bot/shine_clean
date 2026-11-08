@@ -1,0 +1,17 @@
+{
+  "name": "shine-clean",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Stitch 디자인 기반 샤인크린 병원 정기청소 웹사이트",
+  "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "start": "node scripts/serve.mjs",
+    "build": "node scripts/build.mjs",
+    "check": "node --check app.js && node --check work.js && node --check estimate.js && node --check firebase-client.js && node --check admin.js && node --check admin-model.js && node --check scripts/serve.mjs && node --check scripts/build.mjs",
+    "test": "node --experimental-vm-modules --test tests/*.test.mjs"
+  },
+  "devDependencies": {
+    "jsdom": "^29.1.1"
+  }
+}
