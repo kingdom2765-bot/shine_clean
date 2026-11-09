@@ -2,11 +2,17 @@
 <main id="main" class="work-page pt-20">
 <section class="work-hero work-container">
   <div><span class="eyebrow">OUR WORK · FIELD ARCHIVE</span><h1>병원청소 거래처와<br>공간별 작업사례</h1><p>병원부터 사무실까지, 매일 이어지는 청결 관리.<br>함께하는 거래처와 공간별 작업 기록을 한곳에서 살펴보세요.</p><div class="work-jumps"><a href="#client-directory">거래처 목록 ↓</a><a href="#case-gallery">작업 이미지 보기 ↓</a></div></div>
-  <div class="work-hero-index"><span>OUR CLIENTS</span><div><strong id="work-client-total">{{clientCount}}</strong><span>등록 거래처</span></div><div><strong>06</strong><span>작업 기록 예시</span></div></div>
+  <div class="work-hero-index"><span>OUR CLIENTS</span><div><strong id="work-client-total">{{clientCount}}</strong><span>전체 등록 거래처</span></div><div><strong id="work-hospital-total">{{hospitalClientCount}}</strong><span>병원 거래처</span></div><div><strong id="work-office-total">{{officeClientCount}}</strong><span>사무실 거래처</span></div></div>
 </section>
 <section class="work-directory py-space-xl" id="client-directory" aria-labelledby="directory-title">
  <div class="work-container">
   <div class="work-section-heading"><div><span class="eyebrow">01. CLIENT DIRECTORY</span><h2 id="directory-title">함께하는 거래처</h2></div></div>
+  <form id="client-filters" class="work-filters" aria-label="거래처 조회 조건" hidden>
+   <label>분류<select id="client-group" name="group"><option value="">전체 거래처</option><option value="병원">병원만 보기</option><option value="사무실">사무실만 보기</option></select></label>
+   <label>지역<select id="client-region" name="region"><option value="">전체 지역</option></select></label>
+   <label>종목·진료과<select id="client-category" name="category"><option value="">전체 종목·진료과</option></select></label>
+   <button type="reset" class="work-reset">전체 보기</button>
+  </form>
   <div class="work-results"><p id="client-result-count" role="status" aria-live="polite">{{clientSummary}}</p></div>
   <div class="work-client-grid" id="client-list" data-client-page="{{clientPage}}">{{clients}}</div>
   <nav id="client-pagination" class="work-pagination" aria-label="거래처 목록 페이지">{{clientPagination}}</nav>
@@ -21,4 +27,4 @@
 </section>
 </main>
 <dialog id="case-dialog" class="case-dialog" aria-labelledby="case-title"><button class="case-close dialog-close" aria-label="작업 기록 닫기">×</button><div id="case-body"></div></dialog>
-{{footer}}{{dialog}}<script src="app.js" defer></script><script src="motion.js" defer></script><script src="work.js" type="module"></script></body></html>
+{{footer}}{{dialog}}<script id="public-client-data" type="application/json">{{publicClientData}}</script><script src="app.js" defer></script><script src="motion.js" defer></script><script src="work.js" type="module"></script></body></html>

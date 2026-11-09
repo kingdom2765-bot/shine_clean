@@ -72,6 +72,11 @@ dialog{width:min(560px,calc(100% - 40px));max-height:85dvh;padding:48px 36px 36p
   .change-comparison-cards dt{font-size:13px;line-height:20px;color:var(--secondary);margin-bottom:8px}
   .change-comparison-cards dd{margin:0;font-size:15px;line-height:24px;color:var(--ink)}
 }
+.specialist-standards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.specialist-standards article{padding:28px;background:var(--low);border-top:2px solid var(--accent)}
+.specialist-standards article h3{font-size:20px;margin-bottom:12px;color:var(--primary)}
+.specialist-standards article p{font-size:15px;line-height:1.8;color:var(--ink)}
+@media(max-width:767px){.specialist-standards{grid-template-columns:minmax(0,1fr)}}
 /* 전문업체 소개 페이지 */
 .specialist-page{word-break:keep-all}
 .specialist-page h1,.specialist-page h2{font-weight:400}

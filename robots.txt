@@ -3,3 +3,5 @@ Allow: /
 
 User-agent: *
 Allow: /
+
+Sitemap: https://kingdom2765-bot.github.io/shine_clean/sitemap.xml

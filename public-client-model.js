@@ -12,3 +12,14 @@ export function toPublicClient(record) {
 export function sortPublicClients(records) {
   return records.map(toPublicClient).sort((a, b) => (a.clientGroup === '병원' ? 0 : 1) - (b.clientGroup === '병원' ? 0 : 1) || a.publicName.localeCompare(b.publicName, 'ko'));
 }
+
+export function clientRegion(client) {
+  const parts = client.address.trim().split(/\s+/);
+  const province = ({ 서울시: '서울', 서울특별시: '서울', 경기도: '경기', 인천시: '인천', 인천광역시: '인천' })[parts[0]] || parts[0];
+  if (parts[1]?.startsWith('(')) return `${province} ${parts.slice(1).join(' ')}`;
+  return [province, parts[1]].filter(Boolean).join(' ');
+}
+
+export function filterPublicClients(clients, { group = '', region = '', category = '' } = {}) {
+  return clients.filter(client => (!group || client.clientGroup === group) && (!region || clientRegion(client) === region) && (!category || client.category === category));
+}

@@ -57,6 +57,22 @@ test('built pages contain accurate copy, approved metrics and crawlable twelve-c
     const doc = new JSDOM(await readFile(new URL(`../${path}`, import.meta.url), 'utf8')).window.document;
     assert.match(doc.querySelector('meta[name=robots]').content, /noindex/);
   }
+  const config = JSON.parse(await readFile(new URL('../site.config.json', import.meta.url), 'utf8'));
+  const sitemap = new JSDOM(await readFile(new URL('../sitemap.xml', import.meta.url), 'utf8'), { contentType: 'application/xml' }).window.document;
+  assert.equal(sitemap.querySelectorAll('loc').length, publicPages.length + Math.ceil(clients.length / 12) - 1);
+  assert.ok([...sitemap.querySelectorAll('loc')].every(loc => loc.textContent.startsWith(config.siteUrl)));
+  assert.doesNotMatch(sitemap.documentElement.outerHTML, /p6-admin|p7-clients/);
+  const home = new JSDOM(main).window.document;
+  assert.equal(home.querySelector('[rel=canonical]').href, config.siteUrl);
+  const work = new JSDOM(await readFile(new URL('../p3-our-work.html', import.meta.url), 'utf8')).window.document;
+  const embedded = JSON.parse(work.querySelector('#public-client-data').textContent);
+  assert.equal(embedded.length, clients.length);
+  assert.ok(embedded.every(client => Object.keys(client).sort().join(',') === 'address,category,clientGroup,publicName'));
+  const specialist = await readFile(new URL('../p2-why-specialist.html', import.meta.url), 'utf8');
+  assert.doesNotMatch(specialist, /단일 걸레|일반 외주 미화업체|장비 구조 이해 부재/);
+  assert.match(specialist, /샤인크린 병원청소 관리 기준/);
+  const service = await readFile(new URL('../p1-hospital-regular-cleaning.html', import.meta.url), 'utf8');
+  assert.match(service, /서울 전역/); assert.match(service, /경기 전역/);
 });
 
 test('snapshot refresh rejects unexpected fields and malformed public data', () => {
