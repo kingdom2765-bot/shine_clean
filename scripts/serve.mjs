@@ -3,16 +3,28 @@ import { readFile } from 'node:fs/promises';
 import { resolve, extname, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { build } from './build.mjs';
+import { refreshPublicClients } from './refresh-public-clients.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.png': 'image/png', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml' };
+const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.png': 'image/png', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml', '.txt': 'text/plain; charset=utf-8', '.xml': 'application/xml; charset=utf-8' };
 const port = Number(process.env.PORT || 5173);
+let rebuilding;
+function rebuild() {
+  if (!rebuilding) rebuilding = (async () => {
+    if (process.env.PUBLIC_CLIENTS_SYNC !== '0') {
+      try { await refreshPublicClients(); } catch { console.warn('공개 거래처 동기화에 실패해 최근 스냅샷으로 미리보기를 생성합니다.'); }
+    }
+    await build();
+  })().finally(() => { rebuilding = undefined; });
+  return rebuilding;
+}
 const server = createServer(async (request, response) => {
   try {
     const path = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);
-    if (path === '/' || path.endsWith('.html')) await build();
+    if (path === '/' || path.endsWith('.html') || path === '/robots.txt' || path === '/sitemap.xml') await rebuild();
     const target = resolve(root, `.${path === '/' ? '/index.html' : path}`);
-    if (!target.startsWith(resolve(root) + sep) || !types[extname(target)]) {
+    const relative = path.replace(/^\//, '');
+    if (!target.startsWith(resolve(root) + sep) || !types[extname(target)] || /^(?:backups|scripts|tests|pages|components|design|node_modules|\.git|\.codex|\.agents)(?:\/|$)/.test(relative) || (/\.(?:txt|xml)$/.test(relative) && !['robots.txt', 'sitemap.xml'].includes(relative))) {
       response.writeHead(404).end('Not found');
       return;
     }

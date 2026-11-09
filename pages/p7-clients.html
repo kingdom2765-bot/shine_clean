@@ -1,0 +1,34 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>실제 거래처 관리 | 샤인크린</title><link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css"><link rel="stylesheet" href="design-tokens.css"><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="admin.css"></head><body data-page="p7-clients" class="bg-background font-body-md text-on-surface">{{header}}
+<main id="main" class="admin-page">
+ <div class="admin-heading"><div><span class="eyebrow">SHINE CLEAN · ADMINISTRATION</span><h1>실제 거래처 관리</h1><p>등록된 거래처 정보를 확인하고 변경사항을 관리하세요.</p></div><button id="admin-logout" class="admin-button secondary" hidden>로그아웃</button></div>
+ <nav class="admin-nav" aria-label="관리자 메뉴"><a href="p6-admin.html">견적 요청 관리</a><a href="p7-clients.html" aria-current="page">실제 거래처 관리</a></nav>
+ <p id="admin-notice" class="admin-notice" role="status" aria-live="polite">관리자 로그인 상태를 확인하고 있습니다.</p>
+ <section id="admin-login" class="admin-login" hidden aria-labelledby="login-title"><span class="eyebrow">AUTHORIZED ACCESS</span><h2 id="login-title">관리자 로그인</h2><p>지정된 관리자 계정으로 로그인해 주세요.</p><form id="admin-login-form"><label for="admin-email">이메일</label><input id="admin-email" type="email" autocomplete="username" value="kingdom2765@naver.com" required><label for="admin-password">비밀번호</label><input id="admin-password" type="password" autocomplete="current-password" required><button class="admin-button" id="admin-signin">로그인</button></form><button type="button" id="admin-reset" class="admin-text-button">처음 이용 / 비밀번호 재설정</button><p class="admin-small">처음 이용하시면 위 버튼을 눌러 이메일에서 비밀번호를 설정해 주세요.</p></section>
+ <section id="admin-verification" class="admin-login" hidden><h2>이메일 인증이 필요합니다</h2><p>개인정보 보호를 위해 이메일 인증을 완료한 관리자만 거래처를 확인할 수 있습니다.</p><button id="admin-send-verification" class="admin-button">인증 메일 보내기</button><button id="admin-check-verification" class="admin-button secondary">인증 완료 후 다시 확인</button></section>
+ <section id="admin-dashboard" hidden aria-label="실제 거래처 관리">
+  <div class="admin-stats client-stats" id="client-stats"></div>
+  <div class="admin-toolbar"><div><h2>등록된 거래처</h2><p id="client-count" class="admin-small"></p></div><div class="client-toolbar-actions"><button id="client-refresh" class="admin-button secondary">새로고침 ↻</button><button id="client-new" class="admin-button">+ 신규 거래처 등록</button></div></div>
+  <div class="admin-filters"><label>거래처명 · 외부 노출명 · 등록번호 검색<input id="client-search" type="search" placeholder="검색어를 입력해 주세요" autocomplete="off"></label><label>분류<select id="client-filter"><option value="all">전체 분류</option><option value="병원">병원</option><option value="사무실">사무실</option></select></label></div>
+  <div class="client-list-head" aria-hidden="true"><span>거래처명 · 업태 / 종목</span><span>외부 노출명</span><span>등록번호</span><span>주소</span><span>분류</span><span>등록일자</span></div>
+  <div id="client-list" class="admin-list"></div><p id="client-empty" class="admin-empty" hidden></p><button id="client-more" class="admin-button secondary admin-more" hidden>거래처 200건 더 불러오기</button>
+ </section>
+</main>
+<dialog id="client-detail" class="admin-dialog" aria-labelledby="client-detail-title">
+ <div class="admin-dialog-top"><span class="eyebrow">CLIENT RECORD</span><button id="client-close" class="admin-text-button" aria-label="거래처 상세창 닫기">닫기 ×</button></div>
+ <h2 id="client-detail-title"></h2><p id="client-document-id" class="admin-small"></p>
+ <dl class="admin-detail-fields"><dt>거래처 등록번호</dt><dd id="client-business-number"></dd></dl><p class="admin-small">등록번호는 거래처를 구분하는 기준으로 유지됩니다.</p>
+ <form id="client-edit-form">
+ <div id="client-new-number-field" class="client-form-field" hidden><label for="client-new-number">거래처 등록번호 <span aria-hidden="true">*</span></label><input id="client-new-number" name="businessNumber" type="text" inputmode="numeric" maxlength="12" placeholder="000-00-00000" disabled aria-describedby="client-number-help"><p id="client-number-help" class="admin-small">사업자등록번호 10자리를 입력해 주세요. 등록 후에는 변경할 수 없습니다.</p></div>
+ <label for="client-name">거래처명 <span aria-hidden="true">*</span></label><input id="client-name" name="cleanName" maxlength="200" required autocomplete="organization">
+ <label for="client-public-name">외부 노출명 <span aria-hidden="true">*</span></label><input id="client-public-name" name="publicName" maxlength="200" required aria-describedby="client-public-help"><p id="client-public-help" class="admin-small">홈페이지 표시용 이름입니다. 가려진 글자를 확인해 주세요. 원본 거래처명과 별도로 저장되며, 원본명을 수정해도 자동으로 바뀌지 않습니다.</p>
+ <label for="client-group">분류</label><select id="client-group" name="clientGroup" required><option value="병원">병원</option><option value="사무실">사무실</option></select>
+ <label for="client-state">거래처 상태</label><select id="client-state" name="isClosed"><option value="false">정상</option><option value="true">폐업</option></select>
+ <label for="client-address">주소</label><input id="client-address" name="address" maxlength="500" autocomplete="street-address">
+ <label for="client-type">업태</label><input id="client-type" name="businessType" maxlength="200">
+ <label for="client-category">종목</label><input id="client-category" name="category" maxlength="200">
+ <label for="client-date">등록일</label><input id="client-date" name="registeredDate" type="date" min="0001-01-01" max="9999-12-31">
+ <p id="client-updated" class="admin-small"></p><p id="client-feedback" role="status" aria-live="polite"></p>
+ <div class="admin-dialog-actions"><button id="client-cancel" type="button" class="admin-button secondary">취소</button><button id="client-save" class="admin-button">변경사항 저장</button></div>
+ </form>
+</dialog>
+{{footer}}{{dialog}}<script src="app.js" defer></script><script src="admin.js" type="module"></script></body></html>

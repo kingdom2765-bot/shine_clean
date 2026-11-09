@@ -1,0 +1,656 @@
+[
+  {
+    "publicName": "*의원",
+    "category": "피부과",
+    "address": "서울시 강남구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "*치과",
+    "category": "치과의원",
+    "address": "서울시 강남구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "강**렌의원",
+    "category": "일반의원",
+    "address": "서울시 강남구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "그*니피부과의원",
+    "category": "피부과",
+    "address": "서울시 서초구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "다*산부인과",
+    "category": "산부인과",
+    "address": "서울시 강남구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "더**트성형외과의원",
+    "category": "성형외과",
+    "address": "서울시 강남구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "더*사의원",
+    "category": "일반의원",
+    "address": "서울시 강남구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "도**워정형외과의원",
+    "category": "정형외과",
+    "address": "서울시 강남구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "레*트성형외과",
+    "category": "성형외과",
+    "address": "서울시 강남구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "르*인클리닉",
+    "category": "피부과",
+    "address": "서울시 서초구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "리*피부과의원",
+    "category": "피부과",
+    "address": "서울시 강남구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "메**브의원",
+    "category": "피부과",
+    "address": "서울시 강남구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "메*스클리닉",
+    "category": "일반의원",
+    "address": "서울시 서초구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "모*모의원",
+    "category": "피부과",
+    "address": "서울시 강남구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "뮤*의원",
+    "category": "피부과",
+    "address": "경기도 남양주시",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "미**림의원",
+    "category": "피부과",
+    "address": "서울시 강동구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "미*스의원",
+    "category": "일반의원",
+    "address": "서울시 (구 미표시)",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "바*슈의원",
+    "category": "피부과",
+    "address": "서울시 강남구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "베스**브미여성의원",
+    "category": "산부인과",
+    "address": "서울시 강남구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "뷰**인성형외과의원",
+    "category": "성형외과",
+    "address": "서울시 강남구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "뷰*유외과의원",
+    "category": "성형외과",
+    "address": "서울시 강남구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "비*체피부과의원",
+    "category": "일반의원",
+    "address": "서울시 강남구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "샤*빔의원",
+    "category": "피부과",
+    "address": "서울시 강남구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "서**린정형외과",
+    "category": "정형외과",
+    "address": "서울시 강동구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "서**린정형외과의원",
+    "category": "정형외과",
+    "address": "서울시 강동구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "서**이성형외과의원",
+    "category": "성형외과",
+    "address": "서울시 서초구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "서**이앤여성의원",
+    "category": "일반의원",
+    "address": "서울시 강동구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "서**한산부인과",
+    "category": "산부인과",
+    "address": "서울시 서초구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "서*탑치과병원",
+    "category": "치과병원",
+    "address": "서울시 서초구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "설*임의원",
+    "category": "피부과",
+    "address": "서울시 강남구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "신*정형외과",
+    "category": "정형외과",
+    "address": "경기도 남양주시",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "아*성형외과의원",
+    "category": "성형외과",
+    "address": "서울시 강동구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "에**유여성의원",
+    "category": "산부인과",
+    "address": "서울시 서초구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "여*인한의원",
+    "category": "한의원",
+    "address": "서울시 서초구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "연**엘마취통증의학내과의원",
+    "category": "마취통증의학과",
+    "address": "서울시 강남구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "오**브 의원",
+    "category": "피부과",
+    "address": "서울시 종로구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "오**브의원",
+    "category": "피부과",
+    "address": "서울시 종로구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "온*프 성형외과의원",
+    "category": "성형외과",
+    "address": "서울시 서초구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "온*프의원",
+    "category": "피부과",
+    "address": "서울시 서초구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "우*성한의원",
+    "category": "한의원",
+    "address": "서울시 강남구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "이*백성형외과의원",
+    "category": "성형외과",
+    "address": "서울시 강남구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "제*셀성형외과의원",
+    "category": "일반의원",
+    "address": "서울시 강남구",
+    "clientGroup": "병원"
+  },
+  {
+    "publicName": "(주) 그**프피",
+    "category": "부동산매매업",
+    "address": "광주광역시 남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "(주) 더*",
+    "category": "부동산중개",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "(주) 라*로",
+    "category": "청소대행업",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "(주) 메**더",
+    "category": "의료컨설팅업",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "(주) 살**로",
+    "category": "웨딩사진촬영",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "(주) 슈**스",
+    "category": "소프트웨어자문",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "(주) 아**엘",
+    "category": "전자상거래",
+    "address": "서울시 서초구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "(주) 에이블**대역점",
+    "category": "필라테스,요가",
+    "address": "서울시 서초구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "(주) 엘**에듀",
+    "category": "어학원",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "(주) 오**쳐스",
+    "category": "인물사진",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "(주) 올**낸싱",
+    "category": "금융서비스",
+    "address": "서울시 서초구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "(주) 주*",
+    "category": "건물관리용역",
+    "address": "경기도 고양시 일산서구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "(주) 핀*크",
+    "category": "기타금융서비스",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "(주) 하**럭스",
+    "category": "소프트웨어개발",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "(주) 해**드",
+    "category": "소호사무실전대",
+    "address": "서울시 송파구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "(주)공**리아",
+    "category": "식음료",
+    "address": "서울시 종로구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "(주)더**퍼니",
+    "category": "출판",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "(주)더블**스아이",
+    "category": "의약품",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "(주)레**우8",
+    "category": "부동산 임대업",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "(주)맥컬러커**케이션즈",
+    "category": "헬스케어메디",
+    "address": "서울시 서초구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "(주)바이**코리아",
+    "category": "무역",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "(주)비**노",
+    "category": "소프트웨어자문",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "(주)알**케이",
+    "category": "부동산컨설팅",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "(주)엘지**러스",
+    "category": "유선통신업",
+    "address": "서울시 용산구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "(주)이씨**텔레콤",
+    "category": "유선통신장비",
+    "address": "서울시 서초구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "(주)정*물",
+    "category": "이미지컨설팅",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "(주)지**에스",
+    "category": "상품중개업",
+    "address": "서울시 송파구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "(주)지엘**코리아",
+    "category": "해상,항공운송",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "(주)청람커**케이션즈",
+    "category": "마케팅컨설턴트",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "(주)태**직스",
+    "category": "국제물류주선",
+    "address": "서울시 서초구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "(주)피**디",
+    "category": "화장품",
+    "address": "서울시 광진구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "(주)하명**건설",
+    "category": "종합건설",
+    "address": "서울시 양천구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "가*지",
+    "category": "전자상거래소",
+    "address": "경기도 김포시",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "닥**로우",
+    "category": "화장품및소매업",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "대성**설비",
+    "category": "인테리어",
+    "address": "서울시 송파구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "디**션(주)",
+    "category": "온라인교육학원",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "런**퍼니",
+    "category": "경영컨설팅업",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "리드101**오영어학원",
+    "category": "영어학원",
+    "address": "서울시 송파구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "리버뷰오**텔 관리단",
+    "category": "미표시",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "메**월드(주)",
+    "category": "스포츠용품",
+    "address": "경기도 화성시",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "문*(주)",
+    "category": "경영컨설팅",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "문**빌딩",
+    "category": "비주거용건물",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "법무법인 더**펌",
+    "category": "변호사업",
+    "address": "경상남도 창원시 성산구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "서초5**러스센터",
+    "category": "미표시",
+    "address": "서울시 서초구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "애이**호역",
+    "category": "미표시",
+    "address": "미표시",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "에이**발김포",
+    "category": "부동산개발,분양",
+    "address": "경기도 광주시",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "엘지유**스볼트업",
+    "category": "전기자동차충전",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "오르* (주) *남점",
+    "category": "일반교습학원",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "오블리**파트너스",
+    "category": "의료컨설팅업",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "와**이",
+    "category": "의료컨설팅",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "윤성**법인",
+    "category": "회계,세무",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "이에프**네셔널",
+    "category": "외국어교육",
+    "address": "서울시 서초구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "정샘**호점",
+    "category": "미용",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "제이아**플러스",
+    "category": "건축공사업",
+    "address": "서울시 서초구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "제이엠**컴퍼니",
+    "category": "원두커피",
+    "address": "부산시 기장군",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "제이엠커* *사라운지",
+    "category": "커피전문점",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "젯트**코리아",
+    "category": "수상레저",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "주식회사 페**어",
+    "category": "전자상거래",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "케**퀵티 (주)",
+    "category": "주차서비스업",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "테**엠(주)",
+    "category": "종합건물관리",
+    "address": "서울시 영등포구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "프**트원 (주)",
+    "category": "부동산매매업",
+    "address": "인천시 연수구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "프라운** 한국대표",
+    "category": "",
+    "address": "서울시 송파구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "플**서울",
+    "category": "광고대행",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "플*트(주)",
+    "category": "소프트웨어개발",
+    "address": "서울시 서초구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "헤이**터디룸",
+    "category": "독서실운영업",
+    "address": "서울시 서초구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "헤이든**디카페",
+    "category": "독서실운영업",
+    "address": "서울시 서초구",
+    "clientGroup": "사무실"
+  },
+  {
+    "publicName": "BOK**테인먼트",
+    "category": "음반기획및제작",
+    "address": "서울시 강남구",
+    "clientGroup": "사무실"
+  }
+]

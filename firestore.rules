@@ -24,7 +24,8 @@ service cloud.firestore {
         && request.resource.data.keys().hasOnly([
           'requestId', 'clinicName', 'contactName', 'phone', 'address', 'clinicType',
           'area', 'frequency', 'changeConsultation', 'message', 'privacyConsent',
-          'privacyVersion', 'status', 'createdAt', 'expiresAt'
+          'privacyVersion', 'status', 'createdAt', 'expiresAt',
+          'toiletIncluded', 'newOpeningConsultation'
         ])
         && request.resource.data.requestId == requestId
         && requiredText(request.resource.data.clinicName, 80)
@@ -42,6 +43,8 @@ service cloud.firestore {
           '방문 주기 상담 후 결정', '일회성 청소'
         ]
         && request.resource.data.changeConsultation is bool
+        && (!('toiletIncluded' in request.resource.data) || request.resource.data.toiletIncluded is bool)
+        && (!('newOpeningConsultation' in request.resource.data) || request.resource.data.newOpeningConsultation is bool)
         && text(request.resource.data.message, 2000)
         && request.resource.data.privacyConsent == true
         && request.resource.data.privacyVersion == '2026-11-09'
@@ -57,6 +60,55 @@ service cloud.firestore {
         && text(request.resource.data.adminNotes, 5000)
         && request.resource.data.updatedAt == request.time
         && request.resource.data.updatedBy == request.auth.uid;
+    }
+    match /client_records/{clientId} {
+      function validClientData() {
+        return request.resource.data.clientGroup in ['병원', '사무실']
+        && request.resource.data.publicId is string
+        && request.resource.data.publicId.matches('^[a-f0-9-]{36}$')
+        && requiredText(request.resource.data.publicName, 200)
+        && requiredText(request.resource.data.cleanName, 200)
+        && !request.resource.data.cleanName.matches('^\\[폐업\\].*')
+        && request.resource.data.isClosed is bool
+        && request.resource.data.clientName == (request.resource.data.isClosed ? '[폐업] ' : '') + request.resource.data.cleanName
+        && text(request.resource.data.address, 500)
+        && text(request.resource.data.businessType, 200)
+        && text(request.resource.data.category, 200)
+        && text(request.resource.data.registeredDate, 10)
+        && (request.resource.data.registeredDate == '' || request.resource.data.registeredDate.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$'))
+        && request.resource.data.updatedAt == request.time
+        && request.resource.data.updatedBy == request.auth.uid;
+      }
+      allow create: if isAdmin()
+        && request.resource.data.keys().hasOnly([
+          'businessNumber', 'clientName', 'cleanName', 'publicName', 'clientGroup', 'isClosed',
+          'address', 'businessType', 'category', 'registeredDate', 'publicId', 'createdAt', 'createdBy', 'updatedAt', 'updatedBy'
+        ])
+        && request.resource.data.businessNumber is string
+        && request.resource.data.businessNumber.matches('^[0-9]{3}-[0-9]{2}-[0-9]{5}$')
+        && clientId == request.resource.data.businessNumber
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.createdBy == request.auth.uid
+        && validClientData();
+      allow read: if isAdmin();
+      allow update: if isAdmin()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'clientName', 'cleanName', 'isClosed', 'address', 'businessType', 'category',
+          'registeredDate', 'clientGroup', 'publicName', 'publicId', 'updatedAt', 'updatedBy'
+        ])
+        && (!('publicId' in resource.data) || request.resource.data.publicId == resource.data.publicId)
+        && validClientData();
+    }
+    match /public_client_records/{publicId} {
+      allow read: if true;
+      allow create, update: if isAdmin()
+        && publicId.matches('^[a-f0-9-]{36}$')
+        && request.resource.data.keys().hasAll(['publicName', 'category', 'address', 'clientGroup'])
+        && request.resource.data.keys().hasOnly(['publicName', 'category', 'address', 'clientGroup'])
+        && requiredText(request.resource.data.publicName, 200)
+        && text(request.resource.data.category, 200)
+        && text(request.resource.data.address, 500)
+        && request.resource.data.clientGroup in ['병원', '사무실'];
     }
     // Existing collections and any unlisted paths remain inaccessible to web clients.
     match /{document=**} {

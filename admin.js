@@ -5,6 +5,8 @@ const ownerEmail = 'kingdom2765@naver.com';
 const ownerUid = 'cOLPnjEzpgXYKdowCJcsKIf4xP73';
 const $ = selector => document.querySelector(selector);
 let authSdk, auth, sdk, db, user, records = [], cursor, selected, hasMore = false, loading = false, busy = false, generation = 0;
+let clientManager;
+const isClients = document.body.dataset.page === 'p7-clients';
 const detail = $('#admin-detail');
 const deletion = $('#admin-delete-dialog');
 const notice = (message, error = false) => { $('#admin-notice').textContent = message; $('#admin-notice').classList.toggle('error', error); };
@@ -46,7 +48,7 @@ function openDetail(record) {
   selected = record;
   $('#admin-detail-title').textContent = record.clinicName || '견적 상세';
   $('#admin-detail-id').textContent = `접수번호 ${record.id}`;
-  const fields = [['접수일', date(record.createdAt)], ['담당자', record.contactName], ['연락처', record.phone], ['소재지', record.address], ['진료 유형', record.clinicType], ['전용면적', record.area || '미기재'], ['관리 주기', record.frequency], ['업체 교체 상담', record.changeConsultation ? '희망' : '신청하지 않음'], ['요청사항', record.message || '미기재'], ['개인정보 동의', record.privacyConsent ? '동의함' : '확인 필요'], ['마지막 수정', date(record.updatedAt)]];
+  const fields = [['접수일', date(record.createdAt)], ['담당자', record.contactName], ['연락처', record.phone], ['소재지', record.address], ['진료 유형', record.clinicType], ['전용면적', record.area || '미기재'], ['관리 주기', record.frequency], ['화장실 청소', typeof record.toiletIncluded === 'boolean' ? (record.toiletIncluded ? '포함' : '미포함') : '미기재'], ['신규 OPEN 병원 상담', typeof record.newOpeningConsultation === 'boolean' ? (record.newOpeningConsultation ? '희망' : '신청하지 않음') : '미기재'], ['업체 교체 상담', record.changeConsultation ? '희망' : '신청하지 않음'], ['요청사항', record.message || '미기재'], ['개인정보 동의', record.privacyConsent ? '동의함' : '확인 필요'], ['마지막 수정', date(record.updatedAt)]];
   $('#admin-detail-fields').replaceChildren(...fields.flatMap(([label, value]) => [node('dt', label), node('dd', value || '—')]));
   $('#admin-status').value = Object.hasOwn(statuses, record.status) ? record.status : 'new'; $('#admin-notes').value = record.adminNotes || ''; $('#admin-detail-feedback').textContent = ''; detail.showModal();
 }
@@ -79,7 +81,7 @@ async function mutate(remove = false) {
   finally { setBusy(false); }
 }
 async function handleUser(nextUser) {
-  generation++; user = undefined; records = []; cursor = undefined; hasMore = false; $('#admin-list').replaceChildren(); $('#admin-stats').replaceChildren(); detail.close(); deletion.close();
+  generation++; user = undefined; records = []; cursor = undefined; hasMore = false; $('#admin-list')?.replaceChildren(); $('#admin-stats')?.replaceChildren(); detail?.close(); deletion?.close(); clientManager?.clear();
   $('#admin-login').hidden = true; $('#admin-verification').hidden = true; $('#admin-dashboard').hidden = true; $('#admin-logout').hidden = !nextUser;
   if (!nextUser) { $('#admin-login').hidden = false; notice('관리자 계정으로 로그인해 주세요.'); return; }
   const currentGeneration = generation;
@@ -88,7 +90,7 @@ async function handleUser(nextUser) {
     if (currentGeneration !== generation) return;
     if (nextUser.uid !== ownerUid || nextUser.email?.toLowerCase() !== ownerEmail || token.claims.admin !== true) { await authSdk.signOut(auth); notice('관리 권한이 없는 계정입니다.', true); return; }
     if (!nextUser.emailVerified) { $('#admin-verification').hidden = false; notice('이메일 인증을 완료해 주세요.'); return; }
-    user = nextUser; $('#admin-dashboard').hidden = false; notice('견적 정보를 불러오고 있습니다.'); await load(true);
+    user = nextUser; $('#admin-dashboard').hidden = false; notice('관리 정보를 불러오고 있습니다.'); if (clientManager) await clientManager.login(nextUser); else await load(true);
   } catch (error) { notice(errorMessage(error), true); }
 }
 $('#admin-login-form').addEventListener('submit', async event => {
@@ -112,17 +114,21 @@ $('#admin-send-verification').addEventListener('click', async () => {
 });
 $('#admin-check-verification').addEventListener('click', async () => { try { await authSdk.reload(auth.currentUser); await handleUser(auth.currentUser); } catch (error) { notice(errorMessage(error), true); } });
 $('#admin-logout').addEventListener('click', async () => { try { await authSdk.signOut(auth); } catch (error) { notice(errorMessage(error), true); } });
-$('#admin-search').addEventListener('input', render); $('#admin-filter').addEventListener('change', render);
-$('#admin-refresh').addEventListener('click', () => load(true)); $('#admin-more').addEventListener('click', () => load(false));
-$('#admin-edit-form').addEventListener('submit', event => { event.preventDefault(); mutate(); });
-$('#admin-detail-close').addEventListener('click', () => { if (!busy) detail.close(); });
-$('#admin-delete').addEventListener('click', () => { $('#admin-delete-name').textContent = selected.clinicName; $('#admin-delete-feedback').textContent = ''; deletion.showModal(); });
-$('#admin-delete-cancel').addEventListener('click', () => { if (!busy) deletion.close(); });
-$('#admin-delete-confirm').addEventListener('click', () => mutate(true));
-for (const dialog of [detail, deletion]) dialog.addEventListener('cancel', event => { if (busy) event.preventDefault(); });
+$('#admin-search')?.addEventListener('input', render); $('#admin-filter')?.addEventListener('change', render);
+$('#admin-refresh')?.addEventListener('click', () => load(true)); $('#admin-more')?.addEventListener('click', () => load(false));
+$('#admin-edit-form')?.addEventListener('submit', event => { event.preventDefault(); mutate(); });
+$('#admin-detail-close')?.addEventListener('click', () => { if (!busy) detail.close(); });
+$('#admin-delete')?.addEventListener('click', () => { $('#admin-delete-name').textContent = selected.clinicName; $('#admin-delete-feedback').textContent = ''; deletion.showModal(); });
+$('#admin-delete-cancel')?.addEventListener('click', () => { if (!busy) deletion.close(); });
+$('#admin-delete-confirm')?.addEventListener('click', () => mutate(true));
+for (const dialog of [detail, deletion]) dialog?.addEventListener('cancel', event => { if (busy) event.preventDefault(); });
 try {
   const connection = await loadFirestore(); sdk = connection.sdk; db = connection.db;
   authSdk = await import('https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js'); auth = authSdk.getAuth(connection.app);
   await authSdk.setPersistence(auth, authSdk.browserSessionPersistence);
+  if (isClients) {
+    const { createClientManager } = await import('./client-records.js');
+    clientManager = createClientManager(connection);
+  }
   authSdk.onAuthStateChanged(auth, handleUser);
 } catch (error) { notice('로그인 서비스를 불러오지 못했습니다. 인터넷 연결을 확인한 후 새로고침해 주세요.', true); }

@@ -20,6 +20,7 @@
 | clinicName / contactName / phone / address | 병원명 / 담당자 / 연락처 / 소재지 |
 | clinicType / area / frequency | 진료 유형 / 면적 / 관리 주기 |
 | changeConsultation / message | 업체 교체 상담 여부 / 요청사항 |
+| toiletIncluded / newOpeningConsultation | 화장실 청소 포함 여부 / 신규 OPEN 병원 상담 여부 (boolean) |
 | requestId / status | 접수번호 / 초기 상태 `new` |
 | privacyConsent / privacyVersion | 동의 여부 / 안내 버전 `2026-11-09` |
 | createdAt / expiresAt | 서버 접수 시각 / 보관 기간 참고 시각 (자동 삭제 없음) |
@@ -46,3 +47,23 @@
 ## 검증
 
 브라우저에서 가상 신청을 제출해 실제 저장, 접수번호, 동의 및 90일 만료를 확인했습니다. 공개 API를 통한 목록 조회·개별 조회·수정과 잘못된 형식의 신청은 거부되는 것을 확인했습니다. 가상 신청은 검증 후 제거했습니다. 문자·이메일 알림은 설정하지 않았습니다.
+
+## 거래 실적 데이터 컬렉션 (`client_records`)
+
+- 컬렉션명: `client_records`
+- 총 등록 건수: 109건
+- 문서 ID: 사업자등록번호 기반 정규화 식별자 (예: `792-86-00267`, `591-86-01023_1`)
+- 필드 구성:
+  - `businessNumber` (string): 사업자등록번호
+  - `clientName` (string): 원본 거래처명
+  - `cleanName` (string): [폐업] 접두어 제거된 상호명
+  - `isClosed` (boolean): 폐업 여부
+  - `address` (string): 사업장 주소
+  - `businessType` (string): 업태
+  - `category` (string): 종목
+  - `registeredDate` (string): 등록일자 (YYYY-MM-DD)
+  - `createdAt` (timestamp): DB 업로드 시각
+- 업로드 스크립트: `scripts/upload-client-records.mjs`
+- 데이터 원본: `data/raw-transactions.tsv`
+
+화장실 포함·신규 OPEN 상담은 독립적인 체크 항목입니다. 새 신청은 두 값을 항상 boolean으로 저장합니다. 기존 신청과 이전 브라우저의 접수 호환을 위해 규칙에서 새 필드의 생략은 허용하되, 값이 있으면 boolean만 허용합니다. 관리자는 과거 신청의 누락된 값에 대해 미기재로 확인합니다.

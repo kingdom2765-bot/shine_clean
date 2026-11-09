@@ -6,3 +6,6 @@ firebase-debug.log*
 .env*
 *-adminsdk-*.json
 service-account*.json
+
+_site/
+data/public-clients.json.tmp

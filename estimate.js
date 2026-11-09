@@ -40,7 +40,9 @@ estimateForm.addEventListener('submit', (event) => {
   if (phone.value.trim() && !/^0\d{8,10}$/.test(phone.value.replace(/[\s()-]/g, ''))) {
     markError(phone, '전화번호를 확인해 주세요. 예: 010-1234-5678, 02-123-4567', 'contact-phone-error');
   }
-  const services = [...estimateForm.querySelectorAll('[name="services"]:checked')].map((field) => field.value);
+  const changeConsultation = document.querySelector('#change-consultation').checked;
+  const newOpeningConsultation = document.querySelector('#new-opening-consultation').checked;
+  const toiletIncluded = document.querySelector('#toilet-included').checked;
   const consent = document.querySelector('#estimate-consent');
   if (!consent.checked) markError(consent, '개인정보 안내를 확인해 주세요.', 'consent-error');
   if (errors.length) {
@@ -56,7 +58,7 @@ estimateForm.addEventListener('submit', (event) => {
     clinicName: read('clinicName'), contactName: read('contactName'),
     phone: read('phone').replace(/[\s()-]/g, ''), address: read('address'),
     clinicType: read('clinicType'), area: read('area'), frequency: read('frequency'),
-    changeConsultation: services.length > 0, message: read('message'),
+    changeConsultation, newOpeningConsultation, toiletIncluded, message: read('message'),
   };
   reviewTitle.textContent = '신청 내용 확인';
   reviewNotice.textContent = '입력 내용을 확인한 뒤 아래 접수 버튼을 눌러 주세요. 접수가 완료되면 접수번호를 안내합니다.';
@@ -68,7 +70,8 @@ estimateForm.addEventListener('submit', (event) => {
   const rows = [
     ['병원명', read('clinicName')], ['담당자', read('contactName')], ['연락처', read('phone')], ['병원 소재지', read('address')],
     ['진료 유형', read('clinicType')], ['전용면적', read('area') || '상담 시 확인'], ['관리 주기', read('frequency')],
-    ['업체 교체 상담', services.length ? '희망' : '미선택'], ['요청사항', read('message') || '없음'],
+    ['화장실 청소', toiletIncluded ? '포함' : '미포함'],
+    ['업체 교체 상담', changeConsultation ? '희망' : '미선택'], ['신규 OPEN 병원 상담', newOpeningConsultation ? '희망' : '미선택'], ['요청사항', read('message') || '없음'],
   ];
   reviewData.replaceChildren(...rows.map(([label, value]) => {
     const row = document.createElement('div');
