@@ -8,7 +8,7 @@
     "dev": "node scripts/serve.mjs",
     "start": "node scripts/serve.mjs",
     "build": "node scripts/build.mjs",
-    "check": "node --check app.js && node --check work.js && node --check estimate.js && node --check firebase-client.js && node --check admin.js && node --check admin-model.js && node --check public-client-model.js && node --check client-model.js && node --check client-records.js && node --check scripts/serve.mjs && node --check scripts/build.mjs && node --check scripts/seo.mjs && node --check scripts/refresh-public-clients.mjs && node --check scripts/package-site.mjs",
+    "check": "node --check motion.js && node --check app.js && node --check work.js && node --check estimate.js && node --check firebase-client.js && node --check admin.js && node --check admin-model.js && node --check public-client-model.js && node --check client-model.js && node --check client-records.js && node --check scripts/serve.mjs && node --check scripts/build.mjs && node --check scripts/seo.mjs && node --check scripts/refresh-public-clients.mjs && node --check scripts/package-site.mjs",
     "test": "node --experimental-vm-modules --test tests/*.test.mjs",
     "refresh:public": "node scripts/refresh-public-clients.mjs",
     "build:public": "node scripts/refresh-public-clients.mjs && node scripts/build.mjs",
