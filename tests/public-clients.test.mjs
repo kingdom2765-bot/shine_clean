@@ -57,8 +57,8 @@ test('directory combines group, region and category, resets pagination and prese
     { ...sample, publicName: '가*회사', clientGroup: '사무실' }]);
   const change = (id, value) => { const select = document.querySelector(id); select.value = value; select.dispatchEvent(new dom.window.Event('change', { bubbles: true })); };
   change('#client-group', '병원');
-  assert.equal(document.querySelector('#work-hospital-total').textContent, '16');
-  assert.equal(document.querySelector('#work-office-total').textContent, '1');
+  assert.equal(document.querySelector('#work-client-total').textContent, '17');
+  assert.equal(document.querySelectorAll('.work-hero-index strong').length, 1);
   assert.equal(document.querySelectorAll('.work-client').length, 12);
   assert.match(document.querySelector('[aria-label="2페이지"]').href, /group=/);
   assert.equal(new URL(document.querySelector('[aria-label="2페이지"]').href).searchParams.get('group'), '병원');

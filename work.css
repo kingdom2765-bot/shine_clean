@@ -73,7 +73,7 @@
  .work-hero{grid-template-columns:minmax(0,1fr);gap:32px;padding-block:48px 32px}
  .work-page h1{font-size:32px;line-height:1.35}
  .work-hero p{font-size:15px;line-height:26px}
- .work-hero-index{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:24px}
+ .work-hero-index{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;padding:24px}
  .work-hero-index>span{grid-column:1/-1}
  .work-hero-index>div{display:block;padding-top:16px;margin:0}
  .work-hero-index strong{display:block;font-size:40px;margin-bottom:8px}

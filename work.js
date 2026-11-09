@@ -65,8 +65,6 @@ function renderClients(records) {
     return card;
   }));
   document.querySelector('#work-client-total').textContent = String(allClients.length);
-  document.querySelector('#work-hospital-total').textContent = String(allClients.filter(client => client.clientGroup === '병원').length);
-  document.querySelector('#work-office-total').textContent = String(allClients.filter(client => client.clientGroup === '사무실').length);
   resultCount.textContent = `전체 ${allClients.length}개 등록 거래처 · 조회 ${clients.length}개 · 병원 우선 표시 · ${currentPage} / ${pages} 페이지${liveUnavailable ? ' · 최근 반영된 목록' : ''}`;
   pagination.replaceChildren(...Array.from({ length: pages }, (_, index) => {
     const page = index + 1; const link = node('a', String(page));
