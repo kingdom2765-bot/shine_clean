@@ -14,6 +14,22 @@ service cloud.firestore {
         && request.auth.token.email_verified == true
         && request.auth.token.admin == true;
     }
+    function validAnalyticsSource(source) {
+      return source is map && source.keys().hasAll(['channel', 'campaign', 'content', 'term'])
+        && source.keys().hasOnly(['channel', 'campaign', 'content', 'term'])
+        && source.channel in ['naver:organic', 'google:organic', 'daum:organic', 'bing:organic', 'naver:cpc', 'google:cpc', 'chatgpt:paid', 'naver:paid_content', 'naver:blog', 'naver:place', 'google:place', 'kakao:place', 'chatgpt:referral', 'external:referral', 'direct:none']
+        && text(source.campaign, 80) && text(source.content, 80) && text(source.term, 80)
+        && source.campaign.matches('^[a-z0-9_.-]*$') && source.content.matches('^[a-z0-9_.-]*$') && source.term.matches('^[a-z0-9_.-]*$');
+    }
+    function validAnalyticsContext(context) {
+      return context is map && context.keys().hasAll(['visitor', 'session', 'first', 'source', 'attributed', 'landing', 'device'])
+        && context.keys().hasOnly(['visitor', 'session', 'first', 'source', 'attributed', 'landing', 'device'])
+        && context.visitor is string && context.visitor.matches('^[a-f0-9-]{36}$')
+        && context.session is string && context.session.matches('^[a-f0-9-]{36}$')
+        && validAnalyticsSource(context.first) && validAnalyticsSource(context.source) && validAnalyticsSource(context.attributed)
+        && text(context.landing, 100) && context.landing.matches('^[a-z0-9.-]+[.]html$')
+        && context.device in ['mobile', 'desktop'];
+    }
     match /estimate_requests/{requestId} {
       allow create: if requestId.matches('^[a-f0-9-]{36}$')
         && request.resource.data.keys().hasAll([
@@ -25,7 +41,7 @@ service cloud.firestore {
           'requestId', 'clinicName', 'contactName', 'phone', 'address', 'clinicType',
           'area', 'frequency', 'changeConsultation', 'message', 'privacyConsent',
           'privacyVersion', 'status', 'createdAt', 'expiresAt',
-          'toiletIncluded', 'newOpeningConsultation'
+          'toiletIncluded', 'newOpeningConsultation', 'analyticsContext'
         ])
         && request.resource.data.requestId == requestId
         && requiredText(request.resource.data.clinicName, 80)
@@ -45,6 +61,7 @@ service cloud.firestore {
         && request.resource.data.changeConsultation is bool
         && (!('toiletIncluded' in request.resource.data) || request.resource.data.toiletIncluded is bool)
         && (!('newOpeningConsultation' in request.resource.data) || request.resource.data.newOpeningConsultation is bool)
+        && (!('analyticsContext' in request.resource.data) || validAnalyticsContext(request.resource.data.analyticsContext))
         && text(request.resource.data.message, 2000)
         && request.resource.data.privacyConsent == true
         && request.resource.data.privacyVersion == '2026-11-09'

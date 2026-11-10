@@ -1,0 +1,9 @@
+{
+  "name": "shine-clean-analytics",
+  "private": true,
+  "type": "module",
+  "main": "index.js",
+  "engines": { "node": "22" },
+  "scripts": { "check": "node --check index.js && node --check lib/service.js && node --check lib/analytics-model.js" },
+  "dependencies": { "firebase-admin": "^13.0.0", "firebase-functions": "^6.0.0" }
+}

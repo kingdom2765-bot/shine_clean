@@ -25,8 +25,11 @@ export function searchMetadata(html, path, config) {
   const graph = [{ '@type': 'Organization', '@id': organizationId, name: config.businessName, telephone: config.telephone, ...(config.businessNumber ? { taxID: config.businessNumber } : {}), ...(config.businessAddress ? { address: { '@type': 'PostalAddress', streetAddress: config.businessAddress, addressCountry: 'KR' } } : {}), ...(base ? { url: base } : {}) },
     { '@type': 'WebPage', name: title, description, inLanguage: 'ko-KR', ...(url ? { '@id': url, url } : {}), about: { '@id': organizationId } }];
   if (path === 'index.html' || path === 'p1-hospital-regular-cleaning.html') graph.push({ '@type': 'Service', name: '병원·의원 정기청소', serviceType: '병원 정기청소', provider: { '@id': organizationId }, areaServed: config.serviceAreas.map(name => ({ '@type': 'AdministrativeArea', name })), ...(url ? { url } : {}) });
+  if (config.legalName) graph[0].legalName = config.legalName;
+  if (config.brandEnglishName) graph[0].alternateName = config.brandEnglishName;
+  if (base) graph[0].logo = new URL('assets/brand/wonnae-care.svg', base).href;
   const schema = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }).replace(/</g, '\\u003c');
-  return html.replace('</head>', `${url ? `<link rel="canonical" href="${escapeHtml(url)}"><meta property="og:url" content="${escapeHtml(url)}">` : ''}<meta property="og:type" content="website"><meta property="og:site_name" content="${escapeHtml(config.businessName)}"><meta property="og:title" content="${escapeHtml(title)}"><meta property="og:description" content="${escapeHtml(description)}"><script type="application/ld+json">${schema}</script></head>`);
+  return html.replace('</head>', `<link rel="icon" href="./assets/brand/favicon.svg" type="image/svg+xml">${url ? `<link rel="canonical" href="${escapeHtml(url)}"><meta property="og:url" content="${escapeHtml(url)}">` : ''}<meta property="og:type" content="website"><meta property="og:site_name" content="${escapeHtml(config.businessName)}"><meta property="og:title" content="${escapeHtml(title)}"><meta property="og:description" content="${escapeHtml(description)}"><script type="application/ld+json">${schema}</script></head>`);
 }
 
 export function crawlerPolicy(config, paths) {

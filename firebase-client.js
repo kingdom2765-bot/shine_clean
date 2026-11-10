@@ -26,6 +26,9 @@ export function loadFirestore() {
 export async function saveEstimate(estimate, requestId) {
   if (!navigator.onLine) throw new Error('인터넷 연결을 확인한 후 다시 신청해 주세요.');
   const { sdk, db } = await loadFirestore();
+  // Analytics must never prevent a consultation request from being saved.
+  let analyticsContext;
+  try { analyticsContext = (await import('./analytics.js')).estimateContext(); } catch { /* no tracking context */ }
   const record = {
     ...estimate,
     requestId,
@@ -34,6 +37,7 @@ export async function saveEstimate(estimate, requestId) {
     status: 'new',
     createdAt: sdk.serverTimestamp(),
     expiresAt: sdk.Timestamp.fromMillis(Date.now() + 90 * 24 * 60 * 60 * 1000),
+    ...(analyticsContext ? { analyticsContext } : {}),
   };
   await sdk.setDoc(sdk.doc(db, 'estimate_requests', requestId), record);
   return requestId;

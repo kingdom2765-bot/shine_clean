@@ -1,6 +1,6 @@
 {
   "siteUrl": "https://kingdom2765-bot.github.io/shine_clean/",
-  "businessName": "샤인크린",
+  "businessName": "원내케어",
   "telephone": "+82-1661-2816",
   "serviceAreas": [
     "서울",
@@ -8,5 +8,7 @@
   ],
   "businessNumber": "742-77-00222",
   "representativeName": "권경숙",
-  "businessAddress": "서울특별시 강남구 테헤란로 423, 지상2층 2364호 (삼성동)"
+  "businessAddress": "서울특별시 강남구 테헤란로 423, 지상2층 2364호 (삼성동)",
+  "brandEnglishName": "WONNAE CARE",
+  "legalName": "샤인크린환경"
 }

@@ -10,7 +10,8 @@ const stamp = value => ({ toDate: () => new Date(value), toMillis: () => value }
 const tick = () => new Promise(resolve => setImmediate(resolve));
 async function until(predicate) { for (let i = 0; i < 50; i++) { if (predicate()) return; await tick(); } throw new Error('Expected UI state was not reached'); }
 async function harness(clients = false) {
-  const html = await readFile(new URL(clients ? '../pages/p7-clients.html' : '../pages/p6-admin.html', import.meta.url), 'utf8');
+  const analytics = clients === 'analytics';
+  const html = await readFile(new URL(analytics ? '../pages/p8-analytics.html' : clients ? '../pages/p7-clients.html' : '../pages/p6-admin.html', import.meta.url), 'utf8');
   const dom = new JSDOM(html, { url: 'http://localhost/p6-admin.html' });
   const document = dom.window.document;
   for (const dialog of document.querySelectorAll('dialog')) {
@@ -50,6 +51,8 @@ async function harness(clients = false) {
   }
   const connection = await mockModule({ loadFirestore: async () => ({ sdk, db: {}, app: {} }) });
   const authentication = await mockModule(authSdk);
+  const analyticsLogins = [];
+  const analyticsModule = await mockModule({ createAnalyticsManager: () => ({ clear() {}, login: async value => { analyticsLogins.push(value.uid); } }) });
   const model = new vm.SourceTextModule(await readFile(new URL('../admin-model.js', import.meta.url), 'utf8'), { context });
   const clientModel = new vm.SourceTextModule(await readFile(new URL('../client-model.js', import.meta.url), 'utf8'), { context });
   const clientModule = new vm.SourceTextModule(await readFile(new URL('../client-records.js', import.meta.url), 'utf8'), { context });
@@ -57,11 +60,11 @@ async function harness(clients = false) {
   await clientModule.link(specifier => specifier === './public-client-model.js' ? publicModel : clientModel); await clientModule.evaluate();
   sdk.documentId = () => '__name__';
   const application = new vm.SourceTextModule(await readFile(new URL('../admin.js', import.meta.url), 'utf8'), {
-    context, importModuleDynamically: async specifier => specifier === './client-records.js' ? clientModule : authentication,
+    context, importModuleDynamically: async specifier => specifier === './analytics-admin.js' ? analyticsModule : specifier === './client-records.js' ? clientModule : authentication,
   });
   await application.link(specifier => specifier === './firebase-client.js' ? connection : model);
   await application.evaluate();
-  return { dom, document, store, verifiedUser, login: async user => { auth.currentUser = user; await authListener(user); },
+  return { dom, document, store, verifiedUser, analyticsLogins, login: async user => { auth.currentUser = user; await authListener(user); },
     click: id => document.querySelector(id).click(),
     submit: id => document.querySelector(id).dispatchEvent(new dom.window.Event('submit', { bubbles: true, cancelable: true })) };
 }
@@ -115,5 +118,13 @@ test('client page shares administrator authentication and blocks unauthorized ac
   assert.equal($('#admin-dashboard').hidden, false); assert.equal($('#client-list').children.length, 1);
   await app.login({ ...app.verifiedUser, uid: 'another-user' });
   assert.equal($('#admin-dashboard').hidden, true); assert.equal($('#client-list').children.length, 0);
+  app.dom.window.close();
+});
+test('analytics page starts its report manager only after verified owner authentication', async () => {
+  const app = await harness('analytics');
+  await app.login({ ...app.verifiedUser, uid: 'other' }); assert.equal(app.analyticsLogins.length, 0);
+  await app.login({ ...app.verifiedUser, emailVerified: false }); assert.equal(app.analyticsLogins.length, 0);
+  await app.login(app.verifiedUser); assert.deepEqual(app.analyticsLogins, [uid]); assert.equal(app.document.querySelector('#admin-dashboard').hidden, false);
+  await app.login(null); assert.equal(app.document.querySelector('#admin-dashboard').hidden, true);
   app.dom.window.close();
 });

@@ -7,7 +7,7 @@ import { siteBase, searchMetadata, crawlerPolicy, publicPages, clientPagePath } 
 import { decodePublicDocuments } from '../scripts/refresh-public-clients.mjs';
 
 test('canonical URLs, structured data and sitemap honor the configured domain and subpath', () => {
-  const config = { siteUrl: 'https://example.com/shine/', businessName: '샤인크린', telephone: '1661-2816', serviceAreas: ['서울', '경기'] };
+  const config = { siteUrl: 'https://example.com/shine/', businessName: '원내케어', telephone: '1661-2816', serviceAreas: ['서울', '경기'] };
   const source = '<html><head><title>작업사례</title><meta name="description" content="외부 노출명 안내"></head></html>';
   const doc = new JSDOM(searchMetadata(source, clientPagePath(2), config)).window.document;
   assert.equal(doc.querySelector('[rel=canonical]').href, 'https://example.com/shine/p3-our-work-page-2.html');
@@ -70,7 +70,7 @@ test('built pages contain accurate copy, approved metrics and crawlable twelve-c
   assert.ok(embedded.every(client => Object.keys(client).sort().join(',') === 'address,category,clientGroup,publicName'));
   const specialist = await readFile(new URL('../p2-why-specialist.html', import.meta.url), 'utf8');
   assert.doesNotMatch(specialist, /단일 걸레|일반 외주 미화업체|장비 구조 이해 부재/);
-  assert.match(specialist, /샤인크린 병원청소 관리 기준/);
+  assert.match(new JSDOM(specialist).window.document.body.textContent, /원내케어 병원청소 관리 기준/);
   const service = await readFile(new URL('../p1-hospital-regular-cleaning.html', import.meta.url), 'utf8');
   assert.match(service, /서울 전역/); assert.match(service, /경기 전역/);
 });

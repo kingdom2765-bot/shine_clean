@@ -24,7 +24,7 @@ const server = createServer(async (request, response) => {
     if (path === '/' || path.endsWith('.html') || path === '/robots.txt' || path === '/sitemap.xml') await rebuild();
     const target = resolve(root, `.${path === '/' ? '/index.html' : path}`);
     const relative = path.replace(/^\//, '');
-    if (!target.startsWith(resolve(root) + sep) || !types[extname(target)] || /^(?:backups|scripts|tests|pages|components|design|node_modules|\.git|\.codex|\.agents)(?:\/|$)/.test(relative) || (/\.(?:txt|xml)$/.test(relative) && !['robots.txt', 'sitemap.xml'].includes(relative))) {
+    if (!target.startsWith(resolve(root) + sep) || !types[extname(target)] || /^(?:functions|backups|scripts|tests|pages|components|design|node_modules|\.git|\.codex|\.agents)(?:\/|$)/.test(relative) || (/\.(?:txt|xml)$/.test(relative) && !['robots.txt', 'sitemap.xml'].includes(relative))) {
       response.writeHead(404).end('Not found');
       return;
     }

@@ -1,4 +1,4 @@
-import { readFile, writeFile, readdir, unlink } from 'node:fs/promises';
+import { readFile, writeFile, readdir, unlink, copyFile } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
 import { sortPublicClients, clientPageSize } from '../public-client-model.js';
 import { clientPagePath, publicPages, searchMetadata, relatedLinks, crawlerPolicy, siteBase } from './seo.mjs';
@@ -17,6 +17,7 @@ async function renderWork(source, clients, page = 1) {
 
 // 공통 영역은 빌드 시 조합하므로 JavaScript 없이도 표시됩니다.
 export async function build(options = {}) {
+  await copyFile(new URL('functions/lib/analytics-model.js', root), new URL('analytics-model.js', root));
   const config = { ...JSON.parse(await readFile(new URL('site.config.json', root), 'utf8')), ...options.config };
   if (process.env.SITE_URL && !options.config) config.siteUrl = process.env.SITE_URL;
   siteBase(config.siteUrl);
@@ -43,7 +44,9 @@ export async function build(options = {}) {
     if (publicPages.includes(sourceName)) {
       html = html.replace('</main>', `${relatedLinks(sourceName)}</main>`);
       html = searchMetadata(html, name, config);
+      html = html.replace('</body>', '<script src="analytics.js" type="module"></script></body>');
     }
+    if (!publicPages.includes(sourceName)) html = html.replace('</head>', '<link rel="icon" href="./assets/brand/favicon.svg" type="image/svg+xml"></head>');
     if (/\{\{[^}]+\}\}/.test(html)) throw new Error(`${name}: 미완성 템플릿이 있습니다.`);
     await writeFile(new URL(name, root), html);
   }

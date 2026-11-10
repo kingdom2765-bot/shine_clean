@@ -12,6 +12,45 @@ dialog{width:min(560px,calc(100% - 40px));max-height:85dvh;padding:48px 36px 36p
 @media(max-width:767px){.p-space-lg{padding:28px}.py-space-xl{padding-block:var(--section-space-mobile)}header>div{gap:12px!important}header .brand strong{font-size:19px}header .brand small{font-size:8px;letter-spacing:1px}header .px-5{padding-inline:14px}header .gap-3{gap:4px}main>div>section:first-child{min-height:600px}main>div>section:first-child h1{font-size:clamp(28px,5.6vw,42px)}main>div>section:first-child .bg-gradient-to-r{background:linear-gradient(to right,#fffffff2,#ffffffbf)}footer .gap-6{gap:16px}.text-display-lg{font-size:52px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}
 
+/* Restrained typographic wordmark and consistent brand emphasis. */
+.brand-accent{color:var(--brand-color);white-space:nowrap}
+.motion-hero h1 .brand-accent{font-weight:600;letter-spacing:-.035em;background:linear-gradient(transparent 87%,var(--brand-soft) 0);padding-bottom:2px}
+.brand-wordmark{display:inline-flex;align-items:center;width:180px;line-height:1}
+.wordmark-image{display:block;width:100%;height:auto}
+@media(max-width:767px){.brand-wordmark{width:149px}}
+/* Shared footer: company details and policy links have separate reading columns. */
+.site-footer{padding-block:32px 20px}
+.footer-intro{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;padding-bottom:20px;border-bottom:1px solid var(--card-border)}
+.footer-description{margin-top:10px;font-size:14px;line-height:1.8;color:var(--ink);word-break:keep-all}
+.footer-quality{text-align:right;color:var(--secondary);padding-top:4px}
+.footer-quality>span{font-family:var(--font-family-accent);font-size:10px;letter-spacing:.12em}
+.footer-quality p{margin-top:6px;font-size:12px;line-height:1.8;word-break:keep-all}
+.footer-details{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:40px;padding-block:20px}
+.footer-company{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px 28px;max-width:720px;margin:0}
+.footer-company>div{min-width:0;display:grid;grid-template-columns:100px minmax(0,1fr);align-items:baseline;gap:8px}
+.footer-company dt{font-size:11px;color:var(--secondary);margin-bottom:0;letter-spacing:.02em}
+.footer-company dd{margin:0;font-size:14px;line-height:1.7;color:var(--ink);word-break:keep-all;overflow-wrap:anywhere}
+.footer-company .footer-address{grid-column:1/-1}
+.footer-links{display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding-left:24px;border-left:1px solid var(--card-border)}
+.footer-links-title{font-size:11px;color:var(--secondary);margin-bottom:2px}
+.footer-links a{font-size:13px;color:var(--ink);line-height:1.8;padding-block:2px}
+.footer-links a[data-path="privacy-policy"]{font-weight:600}
+.footer-links a:hover,.footer-admin:hover,.footer-company a:hover{color:var(--primary);text-decoration:underline;text-underline-offset:4px}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;gap:24px;border-top:1px solid var(--card-border);padding-top:16px;font-size:11px;line-height:1.8;color:var(--secondary)}
+.footer-admin{display:inline-flex;align-items:center;gap:12px;white-space:nowrap;font-size:12px;padding-block:4px}
+@media(max-width:767px){
+  .site-footer{padding-block:28px 18px}
+  .footer-intro{flex-direction:column;gap:14px;padding-bottom:16px}
+  .footer-quality{text-align:left;padding:0}
+  .footer-description{font-size:13px;max-width:400px}
+  .footer-details{grid-template-columns:minmax(0,1fr);gap:16px;padding-block:16px}
+  .footer-company{gap:12px 20px}
+  .footer-company>div{display:block}
+  .footer-company dt{margin-bottom:2px}
+  .footer-company dd{font-size:13px}
+  .footer-links{border-left:0;border-top:1px solid var(--card-border);padding:16px 0 0;gap:8px}
+  .footer-bottom{align-items:flex-start;flex-direction:column;gap:8px;padding-top:14px}
+}
 /* 영문 분류 라벨·지표 숫자·브랜드는 기존 영문 글꼴을 유지합니다. */
 .font-label-caps,.font-display-lg,.brand,.eyebrow{font-family:var(--font-family-accent)}
 

@@ -1,0 +1,24 @@
+// Local, synthetic-data visual QA only. Never copied to the public deployment package.
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { build } from './build.mjs';
+import { dayKey, DAY } from '../functions/lib/analytics-model.js';
+import { makeReport } from '../functions/lib/service.js';
+await build();
+const root = new URL('../', import.meta.url), now = Date.now(), visits = [];
+for (let day = 0; day < 7; day++) for (let visitor = 0; visitor < 14 - day; visitor++) visits.push({ visitor: `visitor-${visitor}`, session: `${day}-${visitor}`, day: dayKey(now - day * DAY), source: { channel: visitor % 2 ? 'naver:cpc' : 'google:organic', campaign: visitor % 2 ? 'gangnam-cleaning' : '', content: 'case-01', term: 'clinic' }, first: { channel: 'naver:cpc' }, landing: 'index.html', device: 'mobile', views: 3, phoneClicks: visitor < 3 ? 1 : 0, positions: visitor < 3 ? { header: 1 } : {}, pages: {}, returning: day !== 6, startedAt: now - day * DAY, updatedAt: now - day * DAY });
+const from = dayKey(now - 6 * DAY), to = dayKey(now);
+const costs = Array.from({ length: 7 }, (_, i) => ({ day: dayKey(now - i * DAY), channel: 'naver:cpc', campaign: 'gangnam-cleaning', spend: 15000, impressions: 1200, clicks: 25 }));
+const report = { ...makeReport(visits, [{ id: 'call_sample', type: 'call', day: to, source: { channel: 'naver:cpc', campaign: 'gangnam-cleaning' }, status: 'qualified', evidence: 'manual', qualified: true }], costs, {}, { from, to }, now), from, to, status: { firstCollectedAt: now - 6 * DAY, lastCollectedAt: now } };
+await mkdir(new URL('.local/', root), { recursive: true });
+let html = await readFile(new URL('p8-analytics.html', root), 'utf8');
+html = html.replace('<head>', '<head><base href="/">').replace('<section id="admin-dashboard" hidden', '<section id="admin-dashboard"').replace('<script src="admin.js" type="module"></script>', '<script src="/.local/analytics-preview.js" type="module"></script>');
+html = html.replace('어디서 찾아오고, 어떤 문의로 이어졌는지 확인하세요.', '테스트용 미리보기 · 모든 수치는 가상 자료입니다.');
+await writeFile(new URL('.local/analytics-preview.html', root), html);
+const code = (await readFile(new URL('analytics-admin.js', root), 'utf8')).replace("'./analytics-config.js'", "'./analytics-preview-config.js'").replace("'./analytics-model.js'", "'../analytics-model.js'");
+await writeFile(new URL('.local/analytics-admin-preview.js', root), code);
+await writeFile(new URL('.local/analytics-preview-config.js', root), `export const analyticsConfig = ${JSON.stringify({ enabled: true, endpoint: 'https://fixture.invalid', siteUrl: 'https://kingdom2765-bot.github.io/shine_clean/' })};`);
+await writeFile(new URL('.local/analytics-preview.js', root), `import { createAnalyticsManager } from './analytics-admin-preview.js';
+globalThis.fetch = async url => ({ok: true, json: async () => new URL(url).pathname === '/report' ? ${JSON.stringify(report)} : {platformApis:'not-connected'}});
+document.querySelector('#admin-notice').textContent = '가상 데이터로 화면 구성을 확인하고 있습니다. 운영 서버에 연결하지 않습니다.';
+await createAnalyticsManager().login({getIdToken: async () => 'fixture-token'});`);
+console.log('Synthetic preview: http://127.0.0.1:5178/.local/analytics-preview.html');

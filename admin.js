@@ -7,6 +7,7 @@ const $ = selector => document.querySelector(selector);
 let authSdk, auth, sdk, db, user, records = [], cursor, selected, hasMore = false, loading = false, busy = false, generation = 0;
 let clientManager;
 const isClients = document.body.dataset.page === 'p7-clients';
+const isAnalytics = document.body.dataset.page === 'p8-analytics';
 const detail = $('#admin-detail');
 const deletion = $('#admin-delete-dialog');
 const notice = (message, error = false) => { $('#admin-notice').textContent = message; $('#admin-notice').classList.toggle('error', error); };
@@ -50,6 +51,10 @@ function openDetail(record) {
   $('#admin-detail-id').textContent = `접수번호 ${record.id}`;
   const fields = [['접수일', date(record.createdAt)], ['담당자', record.contactName], ['연락처', record.phone], ['소재지', record.address], ['진료 유형', record.clinicType], ['전용면적', record.area || '미기재'], ['관리 주기', record.frequency], ['화장실 청소', typeof record.toiletIncluded === 'boolean' ? (record.toiletIncluded ? '포함' : '미포함') : '미기재'], ['신규 OPEN 병원 상담', typeof record.newOpeningConsultation === 'boolean' ? (record.newOpeningConsultation ? '희망' : '신청하지 않음') : '미기재'], ['업체 교체 상담', record.changeConsultation ? '희망' : '신청하지 않음'], ['요청사항', record.message || '미기재'], ['개인정보 동의', record.privacyConsent ? '동의함' : '확인 필요'], ['마지막 수정', date(record.updatedAt)]];
   $('#admin-detail-fields').replaceChildren(...fields.flatMap(([label, value]) => [node('dt', label), node('dd', value || '—')]));
+  if (record.analyticsContext) {
+    const context = record.analyticsContext;
+    $('#admin-detail-fields').append(...[['최초 유입', context.first?.channel], ['이번 방문 유입', context.source?.channel], ['문의 성과 경로', context.attributed?.channel], ['캠페인', context.attributed?.campaign || '미지정']].flatMap(([label, value]) => [node('dt', label), node('dd', value || '출처 불명')]));
+  }
   $('#admin-status').value = Object.hasOwn(statuses, record.status) ? record.status : 'new'; $('#admin-notes').value = record.adminNotes || ''; $('#admin-detail-feedback').textContent = ''; detail.showModal();
 }
 function setBusy(value) {
@@ -129,6 +134,10 @@ try {
   if (isClients) {
     const { createClientManager } = await import('./client-records.js');
     clientManager = createClientManager(connection);
+  }
+  if (isAnalytics) {
+    const { createAnalyticsManager } = await import('./analytics-admin.js');
+    clientManager = createAnalyticsManager();
   }
   authSdk.onAuthStateChanged(auth, handleUser);
 } catch (error) { notice('로그인 서비스를 불러오지 못했습니다. 인터넷 연결을 확인한 후 새로고침해 주세요.', true); }

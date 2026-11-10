@@ -35,7 +35,7 @@ if ($robotsDeployRepo.Status -eq 404) {
 $robotsDeployBranch = $robotsDeployRepo.Data.default_branch
 $robotsDeployExisting = Invoke-RobotsGitHub ($robotsDeployRepository + '/contents/robots.txt')
 if ($robotsDeployExisting.Status -eq 404) {
-  $robotsDeployWrite = Invoke-RobotsGitHub ($robotsDeployRepository + '/contents/robots.txt') 'PUT' @{ message = 'Publish host-level crawler policy and Shine Clean sitemap'; branch = $robotsDeployBranch; content = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($robotsDeployContent)) }
+  $robotsDeployWrite = Invoke-RobotsGitHub ($robotsDeployRepository + '/contents/robots.txt') 'PUT' @{ message = 'Publish host-level crawler policy and WONNAE CARE sitemap'; branch = $robotsDeployBranch; content = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($robotsDeployContent)) }
   if ($robotsDeployWrite.Status -ne 201) { throw "robots.txt creation failed (HTTP $($robotsDeployWrite.Status))." }
 } elseif ($robotsDeployExisting.Status -eq 200) {
   $robotsDeployOld = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String(($robotsDeployExisting.Data.content -replace '\s', '')))
