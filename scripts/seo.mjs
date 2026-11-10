@@ -29,8 +29,9 @@ export function searchMetadata(html, path, config) {
   if (config.brandEnglishName) graph[0].alternateName = config.brandEnglishName;
   if (base) graph[0].logo = new URL('assets/brand/wonnae-care.svg', base).href;
   const naverMeta = config.naverSiteVerification ? `<meta name="naver-site-verification" content="${escapeHtml(config.naverSiteVerification)}">` : '';
+  const googleMeta = config.googleSiteVerification ? `<meta name="google-site-verification" content="${escapeHtml(config.googleSiteVerification)}">` : '';
   const schema = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }).replace(/</g, '\\u003c');
-  return html.replace('</head>', `<link rel="icon" href="./assets/brand/favicon.svg" type="image/svg+xml">${naverMeta}${url ? `<link rel="canonical" href="${escapeHtml(url)}"><meta property="og:url" content="${escapeHtml(url)}">` : ''}<meta property="og:type" content="website"><meta property="og:site_name" content="${escapeHtml(config.businessName)}"><meta property="og:title" content="${escapeHtml(title)}"><meta property="og:description" content="${escapeHtml(description)}"><script type="application/ld+json">${schema}</script></head>`);
+  return html.replace('</head>', `<link rel="icon" href="./assets/brand/favicon.svg" type="image/svg+xml">${naverMeta}${googleMeta}${url ? `<link rel="canonical" href="${escapeHtml(url)}"><meta property="og:url" content="${escapeHtml(url)}">` : ''}<meta property="og:type" content="website"><meta property="og:site_name" content="${escapeHtml(config.businessName)}"><meta property="og:title" content="${escapeHtml(title)}"><meta property="og:description" content="${escapeHtml(description)}"><script type="application/ld+json">${schema}</script></head>`);
 }
 
 export function crawlerPolicy(config, paths) {
