@@ -3,6 +3,7 @@
   const main = document.querySelector('main');
   if (!main || /^(p6|p7)-/.test(document.body.dataset.page || '')) return;
   const preference = matchMedia('(prefers-reduced-motion: reduce)');
+  const mobile = matchMedia('(max-width: 767px)');
   const animations = new Set();
   const cleanups = [];
   const once = new WeakSet();
@@ -64,7 +65,7 @@
       const stop = () => { clearTimeout(timer); timer = undefined; };
       function schedule() {
         stop();
-        if (paused || hovering || focused || !visible || document.hidden || unavailable.size >= slides.length - 1) return;
+        if (mobile.matches || paused || hovering || focused || !visible || document.hidden || unavailable.size >= slides.length - 1) return;
         timer = setTimeout(() => show((active + 1) % slides.length), 6000);
       }
       function show(index, manual = false) {
@@ -96,13 +97,19 @@
       if ('IntersectionObserver' in window) {
         new IntersectionObserver(entries => { visible = entries[0].isIntersecting; schedule(); }).observe(hero);
       }
-      controls.hidden = false;
+      function updateViewport() {
+        controls.hidden = mobile.matches;
+        if (mobile.matches) show(0);
+        else schedule();
+      }
+      mobile.addEventListener('change', updateViewport);
+      updateViewport();
       updateToggle();
       schedule();
       window.addEventListener('pagehide', stop);
     }
   }
-  if (hero && !preference.matches) {
+  if (hero && !preference.matches && !mobile.matches) {
     document.body.classList.add('motion-enabled');
     const photo = hero.querySelector('img');
     if (photo) animate(photo, [{ transform: 'scale(1.055)' }, { transform: 'scale(1)' }], { duration: 1400 });

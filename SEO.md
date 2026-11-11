@@ -9,13 +9,13 @@
 
 ## 대표 도메인 설정
 
-`site.config.json`의 `siteUrl`은 현재 공개 주소 `https://kingdom2765-bot.github.io/shine_clean/`입니다. 정식 도메인으로 변경하면 이 값 또는 빌드 환경의 `SITE_URL`을 변경하고 다시 빌드·배포합니다. GitHub Pages 하위 경로까지 포함합니다.
+`site.config.json`의 `siteUrl`은 정식 주소 `https://www.wonnaecare.co.kr/`입니다. 모든 공개 페이지의 canonical·og:url·구조화 데이터와 사이트맵은 이 주소를 기준으로 생성됩니다. 도메인을 변경하면 이 값 또는 빌드 환경의 `SITE_URL`을 변경하고 다시 빌드·배포합니다.
 
-모든 공개 페이지에 절대 canonical·og:url과 회사의 고정 URL·식별자를 생성합니다. `sitemap.xml`은 주요 공개 페이지와 거래처 목록의 다음 페이지를 포함하며, robots.txt에 Sitemap 주소를 함께 기록합니다. 관리자 두 페이지는 noindex를 유지하고 사이트맵에서 제외합니다.
+모든 공개 페이지에 절대 canonical·og:url과 회사의 고정 URL·식별자를 생성합니다. `sitemap.xml`은 주요 공개 페이지 20개와 업체 목록의 추가 페이지를 포함하며, robots.txt에 Sitemap 주소를 함께 기록합니다. 관리자 세 페이지(P6·P7·P8)는 noindex를 유지하고 사이트맵에서 제외합니다. 업체 목록의 추가 페이지는 페이지별 제목·설명문과 자기 자신을 가리키는 canonical을 사용합니다.
 
 구조화 데이터는 확인된 이름·전화번호의 Organization, 페이지 정보의 WebPage, 서비스 안내의 Service만 사용합니다. 사용자가 제공한 사업자등록번호·사업장 주소를 Organization에 함께 반영합니다. 대표자는 공통 하단에 표시합니다. 미제공 인증·별점은 추가하지 않습니다.
 
-`robots.txt`는 OAI-SearchBot과 일반 검색봇의 공개 페이지 접근을 허용합니다. 현재 호스트의 최상위 정책은 별도 저장소 `kingdom2765-bot/kingdom2765-bot.github.io`에서 제공합니다. 원본은 `deployment/host-root/robots.txt`에 보관합니다. `scripts/deploy-host-robots.ps1`은 저장된 GitHub 로그인을 사용해 준비 상태를 확인하며, `-Apply`로 정책을 게시합니다. 기존 정책이 다른 경우 덮어쓰지 않고 중단합니다. 정식 도메인 변경 시 새 호스트 최상위 파일도 별도로 확인해야 합니다. robots.txt는 **도메인 최상위**에서 제공해야 합니다. 프로젝트 하위 폴더의 robots.txt만으로 도메인 전체 정책이 적용되지는 않습니다. CDN·호스팅 방화벽의 봇 허용 상태는 정식 배포 환경에서 별도 확인해야 합니다. GPTBot 학습 정책을 별도로 지정하지는 않았습니다.
+`robots.txt`는 OAI-SearchBot과 일반 검색봇의 공개 페이지 접근을 허용하며 `https://www.wonnaecare.co.kr/sitemap.xml`을 안내합니다. 배포물의 robots.txt는 정식 도메인 최상위 `/robots.txt`에 제공합니다. `deployment/host-root/robots.txt`와 `scripts/deploy-host-robots.ps1`은 이전 GitHub 기본 주소용 보관 자료이며 현재 도메인 배포에 사용하지 않습니다. CDN·호스팅 방화벽의 봇 허용 상태는 실제 배포 환경에서 별도 확인해야 합니다.
 
 ## 거래처 페이지와 동기화
 
@@ -43,7 +43,9 @@ npm run package
 
 최신 공개 자료를 조회한 뒤 `_site/`에 배포용 파일만 복사합니다. 홈페이지를 배포할 때는 저장소 전체 대신 이 폴더를 사용합니다. 원본 거래처 TSV, 백업, 개발 스크립트·테스트는 포함하지 않습니다. 공개 자료를 다시 조회하지 않고 로컬 스냅샷으로 산출물을 확인하려면 `npm run package:preview`를 사용합니다.
 
-검색 등록은 아직 진행하지 않았습니다. 정식 도메인·실제 작업사진을 보완한 뒤 Google Search Console과 네이버 서치어드바이저에서 소유 확인, 사이트맵 제출과 색인 상태를 점검합니다.
+Google Search Console의 소유 확인과 사이트맵 제출은 사용자 제공 화면에서 완료된 것으로 확인했습니다. 페이지의 Google·네이버 소유 확인 메타 태그는 설정값을 유지합니다. 배포 후 정식 사이트의 `/sitemap.xml`과 `/robots.txt`, 신규 페이지의 정상 응답을 확인하고 Search Console의 색인 상태를 점검합니다. 현재 색인 상태는 로컬 파일만으로 확인할 수 없습니다.
+
+GitHub Pages의 도메인 설정 파일 `CNAME`은 `siteUrl` 호스트와 일치할 때 `_site/`에도 포함합니다.
 
 ## 검증
 

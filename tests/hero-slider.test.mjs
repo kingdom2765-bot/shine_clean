@@ -5,11 +5,13 @@ import { JSDOM } from 'jsdom';
 
 const html = await readFile(new URL('../pages/index.html', import.meta.url), 'utf8');
 const source = await readFile(new URL('../motion.js', import.meta.url), 'utf8');
-function harness(reduced = false) {
+function harness(reduced = false, mobile = false) {
   const dom = new JSDOM(html, { runScripts: 'outside-only', pretendToBeVisual: true });
   const win = dom.window, listeners = [], timers = new Map(); let sequence = 0;
   const preference = { matches: reduced, addEventListener: (_, fn) => listeners.push(fn) };
-  win.matchMedia = () => preference;
+  const viewportListeners = [];
+  const viewport = { matches: mobile, addEventListener: (_, fn) => viewportListeners.push(fn) };
+  win.matchMedia = query => query.includes('max-width') ? viewport : preference;
   win.setTimeout = (fn, delay) => { assert.equal(delay, 6000); timers.set(++sequence, fn); return sequence; };
   win.clearTimeout = id => timers.delete(id);
   win.document.querySelectorAll('.hero-slide').forEach(img => Object.defineProperty(img, 'naturalWidth', { value: 1200 }));
@@ -19,8 +21,25 @@ function harness(reduced = false) {
     active: () => [...doc.querySelectorAll('.hero-slide')].findIndex(img => img.classList.contains('is-active')),
     next: () => { const callbacks = [...timers.values()]; timers.clear(); callbacks.forEach(fn => fn()); },
     reduce: () => { preference.matches = true; listeners.forEach(fn => fn()); },
+    resize: value => { viewport.matches = value; viewportListeners.forEach(fn => fn()); },
   };
 }
+
+test('mobile keeps one static hero photo with no slideshow timer or controls, including after desktop resize', () => {
+  const app = harness(false, true);
+  assert.equal(app.timers.size, 0);
+  assert.equal(app.active(), 0);
+  assert.equal(app.doc.querySelector('.hero-slider-controls').hidden, true);
+  app.next(); assert.equal(app.active(), 0);
+  app.resize(false);
+  assert.equal(app.doc.querySelector('.hero-slider-controls').hidden, false);
+  app.next(); assert.equal(app.active(), 1);
+  app.resize(true);
+  assert.equal(app.active(), 0);
+  assert.equal(app.timers.size, 0);
+  assert.equal(app.doc.querySelector('.hero-slider-controls').hidden, true);
+  app.dom.window.close();
+});
 
 test('hero cycles three photos, supports manual choice and pause/resume without changing the headline', () => {
   const app = harness(); const heading = app.doc.querySelector('h1').textContent;

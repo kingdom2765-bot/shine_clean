@@ -6,14 +6,14 @@ export function siteBase(value) {
   return url.href.endsWith('/') ? url.href : `${url.href}/`;
 }
 
-export const publicPages = ['index.html', 'p1-hospital-regular-cleaning.html', 'p2-why-specialist.html', 'p3-our-work.html', 'p4-change-guide.html', 'p5-estimate.html', 'area/gangnam.html', 'area/seocho.html', 'clinic/dermatology.html', 'clinic/plastic-surgery.html', 'guide/cost.html', 'guide/faq.html', 'service/hospital-regular-cleaning.html', 'service/area-detail-cleaning.html', 'service/hospital-deep-cleaning.html'];
-const labels = ['홈', '서비스 제공 범위', '인력·품질관리', '거래처·작업 기록', '업체교체 안내', '무료견적 상담', '강남구 병원청소', '서초구 병원청소', '피부과 청소', '성형외과 청소', '병원청소 비용', '자주 묻는 질문', '병원 정기청소', '공간별 세부 집중청소', '병원 대청소'];
+export const publicPages = ['index.html', 'p1-hospital-regular-cleaning.html', 'p2-why-specialist.html', 'p3-our-work.html', 'p4-change-guide.html', 'p5-estimate.html', 'area/gangnam.html', 'area/seocho.html', 'clinic/dermatology.html', 'clinic/plastic-surgery.html', 'guide/cost.html', 'guide/faq.html', 'service/hospital-regular-cleaning.html', 'service/area-detail-cleaning.html', 'service/hospital-deep-cleaning.html', 'clinic/dentistry.html', 'clinic/obstetrics-gynecology.html', 'clinic/korean-medicine.html', 'area/songpa.html', 'area/gangdong.html'];
+const labels = ['홈', '서비스 제공 범위', '인력·품질관리', '거래처·작업 기록', '업체교체 안내', '무료견적 상담', '강남구 병원청소', '서초구 병원청소', '피부과 청소', '성형외과 청소', '병원청소 비용', '자주 묻는 질문', '병원 정기청소', '공간별 세부 집중청소', '병원 대청소', '치과 청소', '산부인과 청소', '한의원 청소', '송파구 병원청소', '강동구 병원청소'];
 export const pageUrl = (base, path) => base ? new URL(path === 'index.html' ? './' : path, base).href : null;
 const escapeHtml = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
 export function relatedLinks(path) {
   if (!publicPages.includes(path)) return '';
   const links = {
-    'index.html': [1, 2, 3, 4, 5, 10, 11],
+    'index.html': [2, 3, 4, 10, 11],
     'p1-hospital-regular-cleaning.html': [12, 13, 14, 8, 9, 6, 7, 10, 5],
     'p2-why-specialist.html': [12, 13, 3, 4, 6, 7, 5],
     'p3-our-work.html': [6, 7, 8, 9, 5],
@@ -21,8 +21,13 @@ export function relatedLinks(path) {
     'p5-estimate.html': [1, 10, 4],
     'area/gangnam.html': [7, 8, 9, 12, 13, 3, 5],
     'area/seocho.html': [6, 8, 10, 12, 14, 3, 5],
+    'area/songpa.html': [6, 7, 19, 12, 13, 10, 5],
+    'area/gangdong.html': [6, 7, 18, 12, 14, 10, 5],
     'clinic/dermatology.html': [9, 6, 7, 12, 13, 10, 5],
     'clinic/plastic-surgery.html': [8, 6, 7, 12, 14, 4, 5],
+    'clinic/dentistry.html': [16, 17, 12, 13, 10, 4, 5],
+    'clinic/obstetrics-gynecology.html': [15, 17, 12, 10, 2, 4, 5],
+    'clinic/korean-medicine.html': [15, 16, 12, 13, 10, 4, 5],
     'guide/cost.html': [12, 13, 14, 4, 11, 5],
     'guide/faq.html': [1, 4, 10, 6, 7, 5],
     'service/hospital-regular-cleaning.html': [1, 13, 14, 10, 2, 5],
@@ -30,7 +35,10 @@ export function relatedLinks(path) {
     'service/hospital-deep-cleaning.html': [1, 12, 13, 10, 4, 6, 7, 5],
   };
   const indexes = links[path];
-  return `<aside class="related-pages" aria-label="관련 서비스 안내"><h2>상담 전 함께 확인하세요</h2><p>청소 범위와 관리 방식, 거래처 정보를 확인하고 병원에 맞는 상담을 준비하세요.</p><nav aria-label="관련 정보">${indexes.filter(index => publicPages[index] !== path).map(index => `<a href="./${publicPages[index]}">${labels[index]} <span aria-hidden="true">↗</span></a>`).join('')}</nav></aside>`;
+  const heading = path === 'index.html' ? '더 궁금한 내용이 있으신가요?' : '상담 전 함께 확인하세요';
+  const description = path === 'index.html' ? '관리 방식과 병원청소 실적, 업체교체·비용·자주 묻는 질문을 확인하세요.' : '서비스 범위와 관리 방식, 병원청소 실적을 확인하고 상담을 준비하세요.';
+  const relatedLabels = { 2: '인력·품질관리', 3: '병원청소 실적·작업사례', 4: '청소업체 교체 안내', 5: '무료 견적 요청' };
+  return `<aside class="related-pages" aria-label="관련 서비스 안내"><h2>${heading}</h2><p>${description}</p><nav aria-label="관련 정보">${indexes.filter(index => publicPages[index] !== path).map(index => `<a href="./${publicPages[index]}">${relatedLabels[index] || labels[index]} <span aria-hidden="true">↗</span></a>`).join('')}</nav></aside>`;
 }
 
 export function searchMetadata(html, path, config) {
@@ -47,6 +55,15 @@ export function searchMetadata(html, path, config) {
     'service/hospital-regular-cleaning.html': '병원 정기청소',
     'service/area-detail-cleaning.html': '공간별 세부 집중청소',
     'service/hospital-deep-cleaning.html': '병원 대청소',
+    'clinic/dermatology.html': '피부과 청소',
+    'clinic/plastic-surgery.html': '성형외과 청소',
+    'clinic/dentistry.html': '치과 청소',
+    'clinic/obstetrics-gynecology.html': '산부인과 청소',
+    'clinic/korean-medicine.html': '한의원 청소',
+    'area/songpa.html': '송파구 병원청소',
+    'area/gangdong.html': '강동구 병원청소',
+    'area/gangnam.html': '강남구 병원청소',
+    'area/seocho.html': '서초구 병원청소',
   };
   if (serviceNames[path]) graph.push({ '@type': 'Service', name: serviceNames[path], serviceType: serviceNames[path], provider: { '@id': organizationId }, areaServed: config.serviceAreas.map(name => ({ '@type': 'AdministrativeArea', name })), ...(url ? { url } : {}) });
   if (config.legalName) graph[0].legalName = config.legalName;

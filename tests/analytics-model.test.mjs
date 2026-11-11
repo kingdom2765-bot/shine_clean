@@ -4,7 +4,7 @@ import { DAY, dayKey, safePage, safeSource, classify, attribution, buildLink, cs
 import { normalizedEvent, nextVisit, makeReport } from '../functions/lib/service.js';
 
 test('content landing pages remain distinct throughout attribution and navigation', () => {
-  for (const path of ['area/gangnam.html', 'area/seocho.html', 'clinic/dermatology.html', 'clinic/plastic-surgery.html', 'guide/cost.html', 'guide/faq.html', 'service/hospital-regular-cleaning.html', 'service/area-detail-cleaning.html', 'service/hospital-deep-cleaning.html']) {
+  for (const path of ['area/gangnam.html', 'area/seocho.html', 'area/songpa.html', 'area/gangdong.html', 'clinic/dermatology.html', 'clinic/plastic-surgery.html', 'clinic/dentistry.html', 'clinic/obstetrics-gynecology.html', 'clinic/korean-medicine.html', 'guide/cost.html', 'guide/faq.html', 'service/hospital-regular-cleaning.html', 'service/area-detail-cleaning.html', 'service/hospital-deep-cleaning.html']) {
     assert.equal(safePage(`/shine/${path}?utm_source=google#section`), path);
     assert.equal(safePage(path), path);
   }
