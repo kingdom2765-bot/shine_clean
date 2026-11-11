@@ -1,30 +1,31 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="원내케어에 등록된 병원·사무실 거래처의 지역과 종목을 확인하세요. 거래처명은 일부 가려 표시하며, 공간별 작업 이미지는 현재 예시 자료입니다."><meta name="theme-color" content="#fbf9f4"><title>병원청소 작업사례·거래처 소개 | 원내케어</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css"><link rel="stylesheet" href="design-tokens.css"><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="work.css"><link rel="stylesheet" href="motion.css"></head><body data-page="p3-our-work" class="bg-background font-body-md text-on-surface antialiased selection:bg-secondary-container selection:text-on-secondary-container">{{header}}
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="원내케어에 등록된 병원·사무실 거래처의 지역과 종목을 확인하세요. 거래처명은 일부 가려 표시하며, 공간별 작업 이미지는 현재 예시 자료입니다."><meta name="theme-color" content="#fbf9f4"><title>병원청소 작업사례·거래처 소개 | 원내케어</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"><link rel="stylesheet" crossorigin="" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css"><link rel="stylesheet" href="design-tokens.css"><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="work.css"><link rel="stylesheet" href="motion.css"></head><body data-page="p3-our-work" class="bg-background font-body-md text-on-surface antialiased selection:bg-secondary-container selection:text-on-secondary-container">{{header}}
 <main id="main" class="work-page pt-20">
 <section class="work-hero work-container">
-  <div><span class="eyebrow">OUR WORK · FIELD ARCHIVE</span><h1>병원청소 거래처와<br>공간별 작업사례</h1><p>병원부터 사무실까지, 매일 이어지는 청결 관리.<br>함께하는 거래처와 공간별 작업 기록을 한곳에서 살펴보세요.</p><div class="work-jumps"><a href="#client-directory">거래처 목록 ↓</a><a href="#case-gallery">작업 이미지 보기 ↓</a></div></div>
+  <div><span class="eyebrow">OUR WORK · FIELD ARCHIVE</span><h1>병원청소 거래처와<br>공간별 작업사례</h1><p>공개 등록 거래처의 지역과 종목을 확인하세요. 공간별 관리 포인트는 예시 이미지와 함께 안내합니다.</p><div class="work-jumps"><a href="#client-directory">거래처 목록 ↓</a><a href="#case-gallery">작업 이미지 보기 ↓</a></div></div>
   <div class="work-hero-index"><span>OUR CLIENTS</span><div><strong id="work-client-total">{{clientCount}}</strong><span>전체 등록 거래처</span></div></div>
-</section>
-<section class="work-directory py-space-xl" id="client-directory" aria-labelledby="directory-title">
+</section><nav class="section-links existing-section-links" aria-label="거래처·작업 기록"><a href="#clients">거래처</a><a href="#work-records">작업 기록</a></nav>
+<section class="work-directory py-space-xl" id="client-directory" aria-labelledby="directory-title"><span id="clients" class="section-anchor"></span>
  <div class="work-container">
-  <div class="work-section-heading"><div><span class="eyebrow">01. CLIENT DIRECTORY</span><h2 id="directory-title">함께하는 거래처</h2></div></div>
-  <form id="client-filters" class="work-filters" aria-label="거래처 조회 조건" hidden>
+  <div class="work-section-heading"><div><span class="eyebrow">01. CLIENT DIRECTORY</span><h2 id="directory-title">등록 거래처</h2></div></div>
+  <form id="client-filters" class="work-filters" aria-label="거래처 조회 조건" hidden="">
    <label>분류<select id="client-group" name="group"><option value="">전체 거래처</option><option value="병원">병원만 보기</option><option value="사무실">사무실만 보기</option></select></label>
    <label>지역<select id="client-region" name="region"><option value="">전체 지역</option></select></label>
    <label>종목·진료과<select id="client-category" name="category"><option value="">전체 종목·진료과</option></select></label>
    <button type="reset" class="work-reset">전체 보기</button>
   </form>
-  <div class="work-results"><p id="client-result-count" role="status" aria-live="polite">{{clientSummary}}</p></div>
+  <p class="content-note">등록 거래처 목록은 등록 이력을 안내하며 현재 계약 중인 현장 수와 구분됩니다.</p><div class="work-results"><p id="client-result-count" role="status" aria-live="polite">{{clientSummary}}</p></div>
   <div class="work-client-grid" id="client-list" data-client-page="{{clientPage}}">{{clients}}</div>
   <nav id="client-pagination" class="work-pagination" aria-label="거래처 목록 페이지">{{clientPagination}}</nav>
-  <p id="client-empty" class="work-empty" hidden>등록된 거래처가 없습니다.</p>
+  <p id="client-empty" class="work-empty" hidden="">등록된 거래처가 없습니다.</p>
  </div>
 </section>
-<section class="work-gallery py-space-xl" id="case-gallery" aria-labelledby="gallery-title">
+<section class="work-gallery py-space-xl" id="case-gallery" aria-labelledby="gallery-title"><span id="work-records" class="section-anchor"></span>
  <div class="work-container">
-  <div class="work-section-heading"><div><span class="eyebrow">02. CLEANING JOURNAL</span><h2 id="gallery-title">공간별 작업 기록</h2></div></div>
+  <div class="work-section-heading"><div><span class="eyebrow">02. CLEANING JOURNAL</span><h2 id="gallery-title">공간별 관리 포인트</h2></div></div><p class="content-note">공간 안내용 예시 이미지와 관리 항목입니다.</p>
   <div class="work-case-grid">{{cases}}</div>
  </div>
 </section>
 </main>
 <dialog id="case-dialog" class="case-dialog" aria-labelledby="case-title"><button class="case-close dialog-close" aria-label="작업 기록 닫기">×</button><div id="case-body"></div></dialog>
-{{footer}}{{dialog}}<script id="public-client-data" type="application/json">{{publicClientData}}</script><script src="app.js" defer></script><script src="motion.js" defer></script><script src="work.js" type="module"></script></body></html>
+{{footer}}{{dialog}}<script id="public-client-data" type="application/json">{{publicClientData}}</script><script src="app.js" defer=""></script><script src="motion.js" defer=""></script><script src="work.js" type="module"></script>
+</body></html>

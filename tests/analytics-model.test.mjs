@@ -3,6 +3,14 @@ import assert from 'node:assert/strict';
 import { DAY, dayKey, safePage, safeSource, classify, attribution, buildLink, csv, parseCsv, validateCost, summarize, suspicion, range } from '../functions/lib/analytics-model.js';
 import { normalizedEvent, nextVisit, makeReport } from '../functions/lib/service.js';
 
+test('content landing pages remain distinct throughout attribution and navigation', () => {
+  for (const path of ['area/gangnam.html', 'area/seocho.html', 'clinic/dermatology.html', 'clinic/plastic-surgery.html', 'guide/cost.html', 'guide/faq.html', 'service/hospital-regular-cleaning.html', 'service/area-detail-cleaning.html', 'service/hospital-deep-cleaning.html']) {
+    assert.equal(safePage(`/shine/${path}?utm_source=google#section`), path);
+    assert.equal(safePage(path), path);
+  }
+  assert.equal(safePage('/area/unknown.html'), 'index.html');
+});
+
 const now = Date.parse('2026-11-10T12:00:00+09:00');
 const source = { channel: 'naver:cpc', campaign: 'gangnam', content: 'case-01', term: 'clinic' };
 const visit = (overrides = {}) => ({ visitor: 'a', session: 'one', day: '2026-11-10', source, landing: 'index.html', device: 'mobile', views: 2, phoneClicks: 1, positions: { header: 1 }, startedAt: now, updatedAt: now, returning: false, ...overrides });

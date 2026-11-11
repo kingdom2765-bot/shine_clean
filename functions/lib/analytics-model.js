@@ -9,13 +9,32 @@ export const channelLabels = Object.freeze({
   'chatgpt:referral': 'ChatGPT 무료 유입', 'external:referral': '외부 사이트', 'direct:none': '직접·출처 불명',
 });
 export const paidChannels = ['naver:cpc', 'google:cpc', 'chatgpt:paid', 'naver:paid_content'];
-export const pageLabels = { 'index.html': '홈', 'p1-hospital-regular-cleaning.html': '병원정기청소', 'p2-why-specialist.html': '왜 전문업체인가', 'p3-our-work.html': '거래처와 작업사례', 'p4-change-guide.html': '업체교체 안내', 'p5-estimate.html': '무료견적 신청' };
+export const pageLabels = {
+  'index.html': '홈',
+  'p1-hospital-regular-cleaning.html': '서비스 제공 범위',
+  'p2-why-specialist.html': '왜 전문업체인가',
+  'p3-our-work.html': '거래처와 작업사례',
+  'p4-change-guide.html': '업체교체 안내',
+  'p5-estimate.html': '무료견적 신청',
+  'area/gangnam.html': '강남구 병원청소',
+  'area/seocho.html': '서초구 병원청소',
+  'clinic/dermatology.html': '피부과 청소',
+  'clinic/plastic-surgery.html': '성형외과 청소',
+  'guide/cost.html': '병원청소 비용',
+  'guide/faq.html': '자주 묻는 질문',
+  'service/hospital-regular-cleaning.html': '병원 정기청소',
+  'service/area-detail-cleaning.html': '공간별 세부 집중청소',
+  'service/hospital-deep-cleaning.html': '병원 대청소',
+};
 export const dayKey = time => new Date(Number(time) + 9 * 3600000).toISOString().slice(0, 10);
 export const dayStart = day => Date.parse(`${day}T00:00:00+09:00`);
 export const slug = value => /^[a-z0-9][a-z0-9_.-]{0,79}$/.test(String(value || '')) ? String(value) : '';
 export function safePage(value) {
-  const name = String(value || '').split(/[?#]/)[0].split('/').pop() || 'index.html';
-  return ['index.html', 'p1-hospital-regular-cleaning.html', 'p2-why-specialist.html', 'p3-our-work.html', 'p4-change-guide.html', 'p5-estimate.html'].includes(name) || /^p3-our-work-page-\d{1,3}\.html$/.test(name) ? name : 'index.html';
+  const segments = String(value || '').split(/[?#]/)[0].split('/');
+  const nested = segments.slice(-2).join('/');
+  if (Object.hasOwn(pageLabels, nested)) return nested;
+  const name = segments.pop() || 'index.html';
+  return Object.hasOwn(pageLabels, name) || /^p3-our-work-page-\d{1,3}\.html$/.test(name) ? name : 'index.html';
 }
 export function safeSource(source = {}) {
   const channel = Object.hasOwn(channelLabels, source.channel) ? source.channel : 'direct:none';
