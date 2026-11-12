@@ -1618,3 +1618,10 @@ a.seoul-district-card:focus-visible { outline:2px solid var(--brand-color); outl
   .header-home { display:inline-flex; align-items:center; justify-content:center; width:44px; height:44px; border:1px solid var(--card-border); border-radius:50%; color:#182a38; }
   .header-home:focus-visible { outline:2px solid #20695c; outline-offset:4px; }
 }
+
+/* Mobile call actions show a label while keeping tap-to-call available. */
+.phone-mobile-label { display:none; }
+@media (max-width:767px) {
+  .phone-number { display:none; }
+  .phone-mobile-label { display:inline; }
+}
