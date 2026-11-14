@@ -23,7 +23,10 @@
       const heading=node('h2'); const link=node('a',post.title+' ↗'); link.href=localPath(post.path); heading.append(link);
       const stamp=node(post.date?'time':'span',post.date?post.date.replaceAll('-','.'):'검수 중',post.date?'':'info-draft-label');
       if(post.date)stamp.dateTime=post.date;
-      article.append(tags,heading,node('p',post.summary)); if(post.date || post.draft)article.append(stamp); return article;
+      const top=node('div','','info-card-top');
+      top.append(tags);
+      if(post.naverBlogLabel === true)top.append(node('span','네이버 블로그','info-card-source'));
+      article.append(top,heading,node('p',post.summary)); if(post.date || post.draft)article.append(stamp); return article;
     }));
     document.querySelector('#info-result').textContent=`전체 ${posts.length}건 · 검색 결과 ${filtered.length}건`;
     document.querySelector('#info-empty').hidden=filtered.length!==0;
