@@ -95,15 +95,3 @@ try {
   }, connectionFailed);
 } catch { connectionFailed(); }
 
-const caseDialog = document.querySelector('#case-dialog');
-const caseBody = document.querySelector('#case-body');
-document.querySelectorAll('[data-case]').forEach((button) => button.addEventListener('click', () => {
-  const template = document.querySelector(`#case-template-${button.dataset.case}`);
-  caseBody.replaceChildren(template.content.cloneNode(true));
-  caseDialog.showModal();
-}));
-document.querySelector('.case-close').addEventListener('click', () => caseDialog.close());
-caseDialog.addEventListener('click', (event) => {
-  const bounds = caseDialog.getBoundingClientRect();
-  if (event.target === caseDialog && (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom)) caseDialog.close();
-});
