@@ -6,7 +6,18 @@ let state, lastPhone = 0, lastEstimateLink = 0, pending = [], sending = false, r
 // No persistent visitor identifier or consent dialog. Keep only this tab's active visit.
 try { localStorage.removeItem('shine.analytics.v1'); localStorage.removeItem('shine.analytics.consent'); } catch { /* unavailable */ }
 const storage = { get() { try { return JSON.parse(sessionStorage.getItem(KEY)); } catch { return null; } }, set(value) { try { sessionStorage.setItem(KEY, JSON.stringify(value)); } catch { /* page-memory fallback */ } } };
-const internal = () => { try { return JSON.parse(localStorage.getItem('shine.analytics.internal')) === true; } catch { return false; } };
+// Deployment checks must opt out before the first page event, including in a fresh browser.
+const deploymentCheck = new URL(location.href).searchParams.get('analytics_internal') === '1';
+if (deploymentCheck) {
+  try { localStorage.setItem('shine.analytics.internal', 'true'); }
+  catch { try { sessionStorage.setItem('shine.analytics.internal', 'true'); } catch { /* current page still excluded */ } }
+  try { sessionStorage.removeItem(KEY); } catch { /* storage unavailable */ }
+}
+const internal = () => {
+  if (deploymentCheck) return true;
+  try { if (JSON.parse(localStorage.getItem('shine.analytics.internal')) === true) return true; } catch { /* try tab storage */ }
+  try { return JSON.parse(sessionStorage.getItem('shine.analytics.internal')) === true; } catch { return false; }
+};
 const allowed = () => config.enabled && config.endpoint && !navigator.globalPrivacyControl && navigator.doNotTrack !== '1' && !internal();
 const disabledPage = /p[678]-|auth-action/.test(location.pathname) || ['localhost', '127.0.0.1'].includes(location.hostname) || navigator.webdriver;
 function context() {

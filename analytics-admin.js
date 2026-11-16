@@ -44,7 +44,12 @@ export function createAnalyticsManager() {
   period(); $('#cost-day').value = $('#call-day').value = dayKey(Date.now()); $('#call-id').value = crypto.randomUUID();
   $('#history-from').value = dayKey(Date.now() - 364 * DAY); $('#history-to').value = dayKey(Date.now() - DAY); $('#link-url').value = config.siteUrl;
   try { $('#analytics-internal').checked = JSON.parse(localStorage.getItem('shine.analytics.internal')) === true; } catch { /* unavailable */ }
-  $('#analytics-internal').addEventListener('change', () => { try { localStorage.setItem('shine.analytics.internal', JSON.stringify($('#analytics-internal').checked)); } catch { $('#analytics-connection').textContent = '브라우저 저장소를 사용할 수 없어 내부 방문 설정을 저장하지 못했습니다.'; } });
+  try { if (JSON.parse(sessionStorage.getItem('shine.analytics.internal')) === true) $('#analytics-internal').checked = true; } catch { /* unavailable */ }
+  $('#analytics-internal').addEventListener('change', () => {
+    const value = JSON.stringify($('#analytics-internal').checked);
+    try { localStorage.setItem('shine.analytics.internal', value); sessionStorage.removeItem('shine.analytics.internal'); }
+    catch { try { sessionStorage.setItem('shine.analytics.internal', value); } catch { $('#analytics-connection').textContent = '브라우저 저장소를 사용할 수 없어 내부 방문 설정을 저장하지 못했습니다.'; } }
+  });
   $('#analytics-period').addEventListener('change', period);
   for (const id of ['#analytics-from', '#analytics-to']) $(id).addEventListener('change', () => { $('#analytics-period').value = 'custom'; });
   function render(data) {
