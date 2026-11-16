@@ -14,9 +14,23 @@
 - 실제 전화 상담 수동 등록/상태 수정. 외부 실제 통화 수신용 HMAC 서명 웹훅.
 - 상세 90일 보관, 일별 익명 집계 최대 730일 보관. 매일 정리 작업과 장기 조회.
 
-## 배포 전 상태
+## 운영 배포 상태
 
-저장소 변경만으로 수집이 켜지지 않습니다. 기본 `analytics-config.js`는 `enabled: false`, `endpoint: ''`입니다. 허위 통계나 데모 숫자는 보여주지 않습니다. 서버 미연결도 로그인 후 명확하게 표시합니다. 광고 플랫폼 API는 미연결로 표시하며, API를 연결한 것처럼 보고하지 않습니다.
+2026-11-15 사용자 요청에 따라 필요한 API를 활성화하고 서울 리전에 `analyticsApi`, `analyticsEstimate`, `analyticsMaintenance`를 배포했습니다. 운영 홈페이지는 `enabled: true`, `siteUrl: https://www.wonnaecare.co.kr/`, `endpoint: https://asia-northeast3-trading-dashboard-480711.cloudfunctions.net/analyticsApi`로 연결돼 있습니다. 기존 결제 계정을 사용하며 새 프로젝트나 결제 계정은 만들지 않았습니다.
+
+- 실행 계정: `shine-analytics@trading-dashboard-480711.iam.gserviceaccount.com`. Firestore 접근·관리자 인증 확인·이벤트 수신 권한과 분석용 비밀키 접근만 부여했습니다.
+- 빌드 계정: `shine-analytics-build@trading-dashboard-480711.iam.gserviceaccount.com`.
+- 예약 계정: `shine-analytics-scheduler@trading-dashboard-480711.iam.gserviceaccount.com`. 정리 함수 호출만 허용합니다.
+- 비밀키: Secret Manager의 `ANALYTICS_HASH_KEY` 버전 2를 참조합니다. 값을 공개 파일에 저장하지 않습니다.
+- 정리 작업: Cloud Scheduler의 `wonnae-analytics-maintenance`, 서울 리전, 매일 한국시간 01:15. 비공개 정리 함수에 OIDC 인증으로 접근합니다.
+- 서버 호출 주소: `analyticsapi-o7ryhfrbla-du.a.run.app`, `analyticsestimate-o7ryhfrbla-du.a.run.app`, `analyticsmaintenance-o7ryhfrbla-du.a.run.app`.
+- `analyticsCallWebhook`은 배포하지 않았습니다. 실제 통화 서비스 자동 연동과 광고 플랫폼 API 연결은 별도입니다.
+
+이번 배포는 설치된 `gcloud functions deploy --gen2`로 진행했습니다. 견적 이벤트는 Functions Framework에 `cloudEvent('analyticsEstimate', analyticsEstimate)`로 등록해야 하며, 이 등록을 제거하면 이벤트 문서 경로를 잃을 수 있습니다. 추후 Firebase CLI를 사용할 경우 별도 예약 작업을 중복 생성하지 않도록 기존 Scheduler 구성을 먼저 확인합니다.
+
+운영 검증에서 실제 브라우저의 메인→성형외과 이동이 한 방문·2회 조회로 저장되고 유입경로가 유지됨을 확인했습니다. 별도 가상 자료로 네이버 광고·구글 자연검색 분류, 전화 클릭, 중복 전송 방지, 관리자 인증 통계 조회, 진료과 페이지 유입 견적 접수와 성과 연결, 원시 식별자 제거까지 확인했습니다. 검증용 방문·이벤트·가상 견적·성과 자료와 임시 서명 권한은 제거했습니다. 로컬 전체 테스트는 85개 통과했습니다.
+
+허위 통계나 데모 숫자는 보여주지 않습니다. 서버 미연결도 로그인 후 명확하게 표시합니다. 광고 플랫폼 API는 미연결로 표시하며, API를 연결한 것처럼 보고하지 않습니다.
 
 웹사이트의 기존 정적 호스팅을 유지합니다. 서버는 Firebase 2세대 Functions, Node 22, 서울 리전입니다. Functions·Scheduler·Firestore 비용이 발생할 수 있으며 프로젝트 결제와 서비스 권한이 필요합니다.
 
@@ -27,13 +41,17 @@
 3. Firebase CLI가 있는 환경에서 기존 프로젝트로 로그인합니다. 새 프로젝트를 생성하지 않습니다.
 4. `firebase functions:secrets:set ANALYTICS_HASH_KEY --project trading-dashboard-480711`로 충분히 긴 무작위 비밀키를 등록합니다. 이 값은 브라우저 식별자 HMAC용이며 바꾸면 기존 방문자의 연결이 끊어집니다. 파일/클라이언트에 키를 저장하지 않습니다.
 5. 실제 통화 웹훅을 함께 배포하려면 `firebase functions:secrets:set ANALYTICS_CALL_WEBHOOK_KEY --project trading-dashboard-480711`로 별도 키를 등록합니다. 통화 연동이 불필요하면 `analyticsCallWebhook`은 배포 대상에서 제외할 수 있습니다.
-6. `ANALYTICS_ORIGINS`는 허용할 정확한 홈페이지 origin 목록(쉼표 구분)입니다. 기본은 `https://kingdom2765-bot.github.io`입니다. 정식 도메인 변경 시 수정합니다. 개발용 origin을 운영 환경에 추가하지 마세요.
+6. `ANALYTICS_ORIGINS`는 허용할 정확한 홈페이지 origin 목록(쉼표 구분)입니다. 기본은 `https://www.wonnaecare.co.kr`입니다. 기존 배포 환경에 이전 GitHub 도메인이 명시돼 있다면 현재 도메인으로 변경해야 합니다. 개발용 origin을 운영 환경에 추가하지 마세요.
 7. `firebase deploy --only functions:shine-analytics,firestore:rules --project trading-dashboard-480711`로 배포합니다. 기존 Firestore 규칙에 선택적 `analyticsContext` 검증만 추가했고 분석 컬렉션은 웹 클라이언트에서 직접 읽고 쓸 수 없습니다. 기존 견적의 TTL 설정은 변경하지 않습니다.
-8. 반환된 `analyticsApi` URL을 `analytics-config.js`의 `endpoint`로 설정하고 `enabled: true`로 변경합니다. `siteUrl`도 정식 홈페이지 주소로 맞춥니다. 비밀키나 관리자 토큰을 이 파일에 넣지 마세요.
-9. 다시 빌드하고 `_site`에 패키징해 기존 홈페이지 호스팅에 배포합니다. Functions 서버 코드와 비밀 설정은 정적 패키지에서 제외됩니다.
+8. 반환된 `analyticsApi` URL을 `analytics-config.js`의 `endpoint`와 대조하고 다르면 교체합니다. `enabled: true`와 정식 `siteUrl`도 확인합니다. 비밀키나 관리자 토큰을 이 파일에 넣지 마세요. `npm run verify:analytics`로 서버 연결·Firestore 읽기·현재 도메인의 CORS·통계 조회 인증을 점검합니다. 이 명령은 방문이나 가상 견적을 저장하지 않습니다.
+9. `npm run package`로 `_site`에 패키징해 기존 홈페이지 호스팅에 배포합니다. 수집이 활성화된 경우 서버 점검 실패 시 운영 패키징도 중단합니다. 로컬 확인용 `npm run package:preview`는 서버 연결 점검을 생략하며 운영 배포용으로 사용하지 않습니다. Functions 서버 코드와 비밀 설정은 정적 패키지에서 제외됩니다.
 10. 관리자 로그인 후 수집 상태를 확인합니다. 테스트 브라우저에서 확인창 미표시·장기 식별자 미저장, 전화 클릭, 실제 가상 견적 1건, 채널 링크, 반복 전송, 관리자 로그아웃, 비용 CSV를 확인합니다. 가상 신청은 확인 후 기존 관리자 화면에서 삭제합니다.
 
 서버를 배포하지 않았거나 홈페이지를 배포하지 않았다면 실제 운영 수집이 완료되었다고 안내하면 안 됩니다.
+
+## 서버 연결 점검
+
+`GET <analyticsApi URL>/health`는 허용된 홈페이지 origin에서만 사용할 수 있습니다. Firestore의 수집 상태 문서를 읽을 수 있는지 확인한 뒤 `{ "service": "shine-analytics", "ready": true }`만 반환합니다. 방문 기록을 생성하거나 통계·개인정보를 공개하지 않습니다. 이 응답은 서버 연결 점검이며, 실제 브라우저 방문 저장과 관리자 보고서 조회를 확인하는 최종 검증을 대체하지 않습니다.
 
 ## 집계 정의와 주의
 

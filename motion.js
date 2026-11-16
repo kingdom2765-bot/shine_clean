@@ -119,6 +119,30 @@
     });
   }
 
+  const ticker = main.querySelector('.hospital-ticker');
+  if (ticker) {
+    const toggle = ticker.querySelector('.hospital-ticker-toggle');
+    let paused = false, visible = false;
+    const updateTicker = () => {
+      ticker.dataset.paused = String(paused || !visible || document.hidden || mobile.matches || preference.matches);
+      toggle.disabled = preference.matches;
+      toggle.setAttribute('aria-pressed', String(paused));
+      toggle.textContent = preference.matches ? '자동 이동 꺼짐' : paused ? '재생' : '일시정지';
+    };
+    toggle.addEventListener('click', () => { paused = !paused; updateTicker(); });
+    if ('IntersectionObserver' in window) {
+      const tickerObserver = new IntersectionObserver(entries => {
+        visible = entries[0].isIntersecting;
+        updateTicker();
+      });
+      tickerObserver.observe(ticker);
+    } else visible = true;
+    document.addEventListener('visibilitychange', updateTicker);
+    mobile.addEventListener('change', updateTicker);
+    preference.addEventListener('change', updateTicker);
+    updateTicker();
+  }
+
   // Only counters and process connector lines respond to scrolling.
   const targets = main.querySelectorAll('[data-count], .process-steps > li');
   if (!preference.matches && 'IntersectionObserver' in window) {

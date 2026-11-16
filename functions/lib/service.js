@@ -5,7 +5,7 @@ export const digest = value => createHash('sha256').update(value).digest('hex');
 export const pseudonym = (value, secret) => createHmac('sha256', secret).update(value).digest('hex').slice(0, 32);
 const uuid = value => typeof value === 'string' && /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/.test(value);
 export function normalizedEvent(input, now, secret) {
-  if (!input || !uuid(input.id) || !uuid(input.visitor) || !uuid(input.session) || !['page', 'phone'].includes(input.type)) throw new Error('잘못된 이벤트입니다.');
+  if (!input || !uuid(input.id) || !uuid(input.visitor) || !uuid(input.session) || !['page', 'phone', 'estimate_link'].includes(input.type)) throw new Error('잘못된 이벤트입니다.');
   // All accounting uses server time, never browser clocks. Browser time is used only for burst detection.
   const at = Number.isFinite(input.at) && Math.abs(input.at - now) < 5 * 60000 ? input.at : now;
   return { id: input.id, visitor: pseudonym(input.visitor, secret), session: pseudonym(input.session, secret), type: input.type,
@@ -29,6 +29,9 @@ export function nextVisit(old, event) {
       next.regular = gap >= 1000 && Math.abs(gap - previousGap) < 150 ? (v.regular || 0) + 1 : 0;
     }
     next.paidEntry ||= event.paidEntry;
+  } else if (event.type === 'estimate_link') {
+    next.estimateLinkClicks = (v.estimateLinkClicks || 0) + 1;
+    next.estimateLinkPages = { ...v.estimateLinkPages, [event.page]: (v.estimateLinkPages?.[event.page] || 0) + 1 };
   } else { next.phoneClicks++; next.positions[event.position] = (next.positions[event.position] || 0) + 1; next.phonePages[event.page] = (next.phonePages[event.page] || 0) + 1; }
   return next;
 }
@@ -45,11 +48,14 @@ export function makeReport(visits, conversions, costs, reviews, input, now) {
     const v = items[0], flags = suspicion(items); const review = reviews[v.visitor] || {};
     return { visitor: v.visitor, day: v.day, ...flags, status: review.status || 'pending', note: review.note || '', firstAt: Math.min(...items.map(i => i.startedAt)), lastAt: Math.max(...items.map(i => i.updatedAt)), phoneClicks: items.reduce((n, i) => n + i.phoneClicks, 0), channels: [...new Set(items.map(i => i.source.channel))] };
   }).filter(r => r.reasons.length || r.status !== 'pending');
-  const positions = {}, pageClicks = {}; for (const v of visits.filter(v => (filters.includeExcluded || reviews[v.visitor]?.status !== 'excluded') && (!filters.channel || filters.channel === v.source.channel) && (!filters.campaign || filters.campaign === v.source.campaign) && (!filters.device || filters.device === v.device) && (!filters.kind || (filters.kind === 'paid') === paidChannels.includes(v.source.channel)))) {
+  let estimateLinkClicks = 0;
+  const positions = {}, pageClicks = {}, estimateLinkPages = {}; for (const v of visits.filter(v => (filters.includeExcluded || reviews[v.visitor]?.status !== 'excluded') && (!filters.channel || filters.channel === v.source.channel) && (!filters.campaign || filters.campaign === v.source.campaign) && (!filters.device || filters.device === v.device) && (!filters.kind || (filters.kind === 'paid') === paidChannels.includes(v.source.channel)))) {
     for (const [key, count] of Object.entries(v.positions || {})) positions[key] = (positions[key] || 0) + count;
     for (const [key, count] of Object.entries(v.phonePages || {})) pageClicks[key] = (pageClicks[key] || 0) + count;
+    estimateLinkClicks += v.estimateLinkClicks || 0;
+    for (const [key,count] of Object.entries(v.estimateLinkPages || {})) estimateLinkPages[key]=(estimateLinkPages[key] || 0)+count;
   }
   const days = new Set(visits.map(v => v.day));
-  return { ...result, suspicious, positions, pageClicks, costRows: costs, conversions: conversions.filter(c => c.type === 'call'), generatedAt: now, observedDays: days.size, metricVersion: 1 };
+  return { ...result, suspicious, positions, pageClicks, estimateLinkClicks, estimateLinkPages, costRows: costs, conversions: conversions.filter(c => c.type === 'call'), generatedAt: now, observedDays: days.size, metricVersion: 1 };
 }
 export { validateCost, range };

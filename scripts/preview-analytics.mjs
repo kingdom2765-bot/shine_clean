@@ -3,6 +3,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { build } from './build.mjs';
 import { dayKey, DAY } from '../functions/lib/analytics-model.js';
 import { makeReport } from '../functions/lib/service.js';
+import { analyticsConfig } from '../analytics-config.js';
 await build();
 const root = new URL('../', import.meta.url), now = Date.now(), visits = [];
 for (let day = 0; day < 7; day++) for (let visitor = 0; visitor < 14 - day; visitor++) visits.push({ visitor: `visitor-${visitor}`, session: `${day}-${visitor}`, day: dayKey(now - day * DAY), source: { channel: visitor % 2 ? 'naver:cpc' : 'google:organic', campaign: visitor % 2 ? 'gangnam-cleaning' : '', content: 'case-01', term: 'clinic' }, first: { channel: 'naver:cpc' }, landing: 'index.html', device: 'mobile', views: 3, phoneClicks: visitor < 3 ? 1 : 0, positions: visitor < 3 ? { header: 1 } : {}, pages: {}, returning: day !== 6, startedAt: now - day * DAY, updatedAt: now - day * DAY });
@@ -16,7 +17,7 @@ html = html.replace('어디서 찾아오고, 어떤 문의로 이어졌는지 �
 await writeFile(new URL('.local/analytics-preview.html', root), html);
 const code = (await readFile(new URL('analytics-admin.js', root), 'utf8')).replace("'./analytics-config.js'", "'./analytics-preview-config.js'").replace("'./analytics-model.js'", "'../analytics-model.js'");
 await writeFile(new URL('.local/analytics-admin-preview.js', root), code);
-await writeFile(new URL('.local/analytics-preview-config.js', root), `export const analyticsConfig = ${JSON.stringify({ enabled: true, endpoint: 'https://fixture.invalid', siteUrl: 'https://kingdom2765-bot.github.io/shine_clean/' })};`);
+await writeFile(new URL('.local/analytics-preview-config.js', root), `export const analyticsConfig = ${JSON.stringify({ enabled: true, endpoint: 'https://fixture.invalid', siteUrl: analyticsConfig.siteUrl })};`);
 await writeFile(new URL('.local/analytics-preview.js', root), `import { createAnalyticsManager } from './analytics-admin-preview.js';
 globalThis.fetch = async url => ({ok: true, json: async () => new URL(url).pathname === '/report' ? ${JSON.stringify(report)} : {platformApis:'not-connected'}});
 document.querySelector('#admin-notice').textContent = '가상 데이터로 화면 구성을 확인하고 있습니다. 운영 서버에 연결하지 않습니다.';

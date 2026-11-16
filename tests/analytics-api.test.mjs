@@ -7,7 +7,7 @@ import * as model from '../functions/lib/analytics-model.js';
 import * as service from '../functions/lib/service.js';
 
 const owner = 'cOLPnjEzpgXYKdowCJcsKIf4xP73';
-const origin = 'https://kingdom2765-bot.github.io';
+const origin = 'https://www.wonnaecare.co.kr';
 function fakeDb() {
   const docs = new Map();
   const snapshot = ref => ({ id: ref.id, ref, exists: docs.has(ref.path), data: () => docs.get(ref.path) });
@@ -37,7 +37,8 @@ function fakeDb() {
 async function harness() {
   const db = fakeDb(); const context = vm.createContext({ console, Date, Buffer });
   const mock = async values => { const m = new vm.SyntheticModule(Object.keys(values), function () { for (const [key, value] of Object.entries(values)) this.setExport(key, value); }, { context }); await m.link(() => {}); await m.evaluate(); return m; };
-  const modules = new Map();
+  const modules = new Map(), registered = new Map();
+  modules.set('@google-cloud/functions-framework', await mock({ cloudEvent: (name, handler) => registered.set(name, handler) }));
   modules.set('firebase-admin/app', await mock({ initializeApp() {} }));
   modules.set('firebase-admin/auth', await mock({ getAuth: () => ({ verifyIdToken: async token => { if (token !== 'owner' && token !== 'other') throw new Error('bad token'); return { uid: token === 'owner' ? owner : 'other', email: 'kingdom2765@naver.com', email_verified: true, admin: true }; } }) }));
   modules.set('firebase-admin/firestore', await mock({ getFirestore: () => db, Timestamp: { fromMillis: ms => ({ toMillis: () => ms }) }, FieldValue: { increment: increment => ({ increment }) } }));
@@ -54,7 +55,7 @@ async function harness() {
     const result = { status: 200, headers: {} }; const res = { set(k, v) { result.headers[k] = v; return res; }, status(n) { result.status = n; return res; }, json(value) { result.body = value; return res; }, send(value) { result.body = value; return res; } };
     await code.namespace.analyticsApi(req, res); return result;
   }
-  return { db, request, exports: code.namespace };
+  return { db, request, exports: code.namespace, registered };
 }
 const event = (overrides = {}) => ({ id: '11111111-1111-4111-8111-111111111111', visitor: '22222222-2222-4222-8222-222222222222', session: '33333333-3333-4333-8333-333333333333', type: 'page', source: { channel: 'naver:cpc', campaign: 'gangnam', content: '', term: '' }, first: { channel: 'naver:cpc' }, attributed: { channel: 'naver:cpc' }, page: 'index.html', landing: 'index.html', at: Date.now(), device: 'mobile', ...overrides });
 
@@ -65,6 +66,25 @@ test('analytics API rejects absent/foreign admin credentials and unapproved orig
   assert.equal((await app.request('/report', {}, 'owner', { headers: { origin: 'https://evil.test' } })).status, 403);
   assert.equal((await app.request('/report', {}, 'owner', { method: 'GET' })).status, 405);
   assert.equal((await app.request('/report', {}, 'owner', { method: 'OPTIONS' })).status, 204);
+  assert.equal(app.db.docs.size, 0);
+});
+
+test('health checks the current domain and database without collecting visits or revealing reports', async () => {
+  const app = await harness();
+  const result = await app.request('/health', {}, null, { method: 'GET' });
+  assert.equal(result.status, 200);
+  assert.equal(result.body.service, 'shine-analytics');
+  assert.equal(result.body.ready, true);
+  assert.equal(result.headers['Access-Control-Allow-Origin'], origin);
+  assert.equal((await app.request('/health', {}, null, { method: 'GET', headers: { origin: 'https://kingdom2765-bot.github.io' } })).status, 403);
+  assert.equal((await app.request('/collect', {}, null, { method: 'OPTIONS' })).status, 204);
+  assert.equal(app.db.docs.size, 0);
+});
+
+test('estimate deployment uses the CloudEvent signature and rejects events without document identifiers', async () => {
+  const app = await harness();
+  assert.equal(app.registered.get('analyticsEstimate'), app.exports.analyticsEstimate);
+  await assert.rejects(app.exports.analyticsEstimate({ params: {} }), /CloudEvent/);
   assert.equal(app.db.docs.size, 0);
 });
 test('collector deduplicates retry IDs, sanitizes records and updates report without raw event access', async () => {

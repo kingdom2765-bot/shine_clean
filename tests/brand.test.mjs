@@ -33,7 +33,7 @@ test('all built pages use the new brand and preserve the legal business name', a
     const schema = doc.querySelector('[type="application/ld+json"]');
     if (schema) {
       assert.equal(doc.querySelector('meta[property="og:site_name"]')?.content, '원내케어', path);
-      const org = JSON.parse(schema.textContent)['@graph'].find(item => item['@type'] === 'Organization');
+      const org = JSON.parse(schema.textContent)['@graph'].find(item => [item['@type']].flat().includes('Organization'));
       assert.equal(org.name, '원내케어');
       assert.equal(org.alternateName, 'WONNAE CARE');
       assert.equal(org.legalName, '샤인크린환경');

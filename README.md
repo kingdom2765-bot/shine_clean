@@ -29,7 +29,7 @@ npm run dev
 
 ## 현재 범위
 
-메인 화면, 병원 정기청소(`/p1-hospital-regular-cleaning.html`), 왜 전문업체인가(`/p2-why-specialist.html`), 작업사례(`/p3-our-work.html`), 업체교체 안내(`/p4-change-guide.html`), 무료견적(`/p5-estimate.html`)을 구현했습니다. P2 비교표는 모바일에서 항목별 카드로 표시됩니다. P1에는 공간별 관리 범위, 서비스 비교표, 견적 요인, 펼쳐 볼 수 있는 FAQ 6개가 있습니다. 전화 상담은 `1661-2816`으로 연결되며, 온라인 견적은 Firebase Cloud Firestore에 저장됩니다.
+메인 화면, 병원 정기청소(`/p1-hospital-regular-cleaning.html`), 왜 전문업체인가(`/p2-why-specialist.html`), 작업사례(`/p3-our-work.html`), 업체교체 안내(`/p4-change-guide.html`), 무료견적(`/p5-estimate.html`)을 구현했습니다. P2 비교표는 모바일에서 항목별 카드로 표시됩니다. P1에는 공간별 관리 범위, 서비스 비교표, 견적 요인, 펼쳐 볼 수 있는 FAQ 6개가 있습니다. 전화 상담은 `010-8781-3412`으로 연결되며, 온라인 견적은 Firebase Cloud Firestore에 저장됩니다.
 
 시안에서 제공된 실적 수치와 문구를 사용했습니다. 공개 운영 전 사업자 정보와 실적, 서비스 표현을 확인해야 합니다. 원내케어 / WONNAE CARE 브랜드와 전용 SVG 로고를 사용하며, 실제 사업자 상호 샤인크린환경은 유지합니다. Pretendard 웹폰트와 Google Fonts는 인터넷 연결이 필요하며 연결되지 않으면 시스템 글꼴로 표시됩니다.
 

@@ -1,0 +1,32 @@
+[
+  {
+    "path": "work/jongno-obliv-clinic.html",
+    "title": "종로구 피부과 청소 사례 | 오블리브 의원 천장·벽면 청소",
+    "region": "서울 종로구",
+    "specialty": "피부과",
+    "name": "오블리브 의원",
+    "image": "assets/work/jongno-obliv/ceiling.jpg",
+    "alt": "오블리브 의원에서 긴 도구로 천장 표면을 닦는 작업",
+    "description": "천장과 벽면, 출입문 주변을 중심으로 진행한 청소 현장을 소개해 드릴게요."
+  },
+  {
+    "path": "work/gangnam-jcell-clinic.html",
+    "title": "강남구 성형외과 청소 사례 | 제이셀 성형외과의원 바닥 세척",
+    "region": "서울 강남구",
+    "specialty": "성형외과",
+    "name": "제이셀 성형외과의원",
+    "image": "assets/work/gangnam-jcell/floor-cleaning.jpg",
+    "alt": "바닥 세척 장비를 이용한 제이셀 성형외과의원 실내 바닥 청소",
+    "description": "바닥 세척 장비로 병원 내부 바닥을 청소한 현장을 소개해 드릴게요."
+  },
+  {
+    "path": "work/gangnam-daeum-clinic.html",
+    "title": "강남구 산부인과 바닥 관리 사례 | 다음산부인과 의자 보호캡 설치",
+    "region": "서울 강남구",
+    "specialty": "산부인과",
+    "name": "다음산부인과",
+    "image": "assets/work/gangnam-daeum/chair-floor-protectors.jpg",
+    "alt": "다음산부인과 의자 다리에 설치한 바닥 긁힘 방지 보호캡",
+    "description": "의자에 긁히는 바닥 코팅을 보호하기 위해 보호캡을 직접 구매해 설치한 이야기를 소개해 드릴게요."
+  }
+]

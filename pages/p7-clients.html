@@ -20,7 +20,7 @@
  <form id="client-edit-form">
  <div id="client-new-number-field" class="client-form-field" hidden><label for="client-new-number">거래처 등록번호 <span aria-hidden="true">*</span></label><input id="client-new-number" name="businessNumber" type="text" inputmode="numeric" maxlength="12" placeholder="000-00-00000" disabled aria-describedby="client-number-help"><p id="client-number-help" class="admin-small">사업자등록번호 10자리를 입력해 주세요. 등록 후에는 변경할 수 없습니다.</p></div>
  <label for="client-name">거래처명 <span aria-hidden="true">*</span></label><input id="client-name" name="cleanName" maxlength="200" required autocomplete="organization">
- <label for="client-public-name">외부 노출명 <span aria-hidden="true">*</span></label><input id="client-public-name" name="publicName" maxlength="200" required aria-describedby="client-public-help"><p id="client-public-help" class="admin-small">홈페이지 표시용 이름입니다. 가려진 글자를 확인해 주세요. 원본 거래처명과 별도로 저장되며, 원본명을 수정해도 자동으로 바뀌지 않습니다.</p>
+ <label for="client-public-name">외부 노출명 <span aria-hidden="true">*</span></label><input id="client-public-name" name="publicName" maxlength="200" required aria-describedby="client-public-help"><p id="client-public-help" class="admin-small">홈페이지에 공개할 실제 업체명입니다. 상호가 정확한지 확인해 주세요. 원본 거래처명과 별도로 저장되며, 원본명을 수정해도 자동으로 바뀌지 않습니다.</p>
  <label for="client-group">분류</label><select id="client-group" name="clientGroup" required><option value="병원">병원</option><option value="사무실">사무실</option></select>
  <label for="client-state">거래처 상태</label><select id="client-state" name="isClosed"><option value="false">정상</option><option value="true">폐업</option></select>
  <label for="client-address">주소</label><input id="client-address" name="address" maxlength="500" autocomplete="street-address">

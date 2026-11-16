@@ -1,0 +1,16 @@
+import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+import { JSDOM } from 'jsdom';
+import { infoOutputs } from './info-build.mjs';
+import { publicPages, clientPagePath } from './seo.mjs';
+const root=fileURLToPath(new URL('../',import.meta.url));
+const config=JSON.parse(await readFile(new URL('../site.config.json',import.meta.url),'utf8'));
+const preview=await infoOutputs(root,config,true);const production=await infoOutputs(root,config,false);
+const clients=JSON.parse(await readFile(new URL('../data/public-clients.json',import.meta.url),'utf8'));
+const existing=[...publicPages,...Array.from({length:Math.ceil(clients.length/12)-1},(_,i)=>clientPagePath(i+2))];
+const articles=preview.outputs.filter(output=>output.path!=='info/index.html' && !output.path.startsWith('info/page/')).map(output=>{const doc=new JSDOM(output.html).window.document;return {path:'/'+output.path.replace(/index\.html$/,''),title:doc.title,description:doc.querySelector('meta[name=description]').content,canonical:doc.querySelector('link[rel=canonical]')?.href,h1_count:doc.querySelectorAll('h1').length,subheadings:doc.querySelectorAll('.info-prose h2').length,body_characters:doc.querySelector('.info-prose').textContent.length,preview_noindex:!!doc.querySelector('meta[name=robots]'),in_production_sitemap:production.sitemap.includes(output.path.replace(/index\.html$/,''))};});
+const report={generated_at:new Date().toISOString(),existing_urls_preserved:existing.length,production_sitemap_urls:existing.length+production.sitemap.length,published:production.posts.length,drafts:preview.posts.filter(post=>post.status!=='published').length,articles};
+if(articles.some(article=>article.h1_count!==1 || article.body_characters<100))throw new Error('상세 페이지 검증 실패');
+await mkdir(new URL('../.local/',import.meta.url),{recursive:true});
+await writeFile(new URL('../.local/info-audit.json',import.meta.url),JSON.stringify(report,null,2)+'\n');
+console.log(JSON.stringify(report,null,2));

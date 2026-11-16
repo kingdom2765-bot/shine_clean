@@ -205,13 +205,22 @@ dialog{width:min(560px,calc(100% - 40px));max-height:85dvh;padding:48px 36px 36p
   .specialist-page .lg\:mt-0{margin-top:0}
 }
 @media(max-width:767px){
-  .specialist-page>div>section:first-child{min-height:0;padding-top:40px;padding-bottom:52px}
-  .specialist-page>div>section:first-child h1{font-size:36px;line-height:1.3}
+  .specialist-page>div>section.py-space-xl{padding-block:32px}
+  .specialist-page>div>section:first-child{min-height:0}
+  .specialist-page>div>section:first-child h1{font-size:var(--font-size-heading-mobile);line-height:1.3}
   .specialist-page .text-headline-xl{font-size:var(--font-size-heading-mobile);line-height:36px}
   .specialist-page .text-body-xl{font-size:16px;line-height:26px}
-  .specialist-page .gap-16{gap:32px}
+  .specialist-page .gap-16,.specialist-page .gap-10{gap:24px}
+  .specialist-page .gap-6{gap:16px}
+  .specialist-page .pb-6{padding-bottom:20px}
   .specialist-page .gap-gutter{gap:24px}
-  .specialist-page .p-space-lg{padding:28px}
+  .specialist-page .p-space-lg{padding:20px}
+  .specialist-page .strengths-intro{gap:16px;margin-bottom:24px}
+  .specialist-page .strengths-metrics,.specialist-page .specialist-standards{gap:16px}
+  .specialist-page .strength-metric,.specialist-page .specialist-standards article{padding:20px}
+  .specialist-page .strength-value{margin-top:16px}
+  .specialist-page .strength-description{margin-top:16px;padding-top:16px}
+  .specialist-page .strength-detail{padding:20px;gap:20px}
   .specialist-page .font-label-caps{overflow-wrap:anywhere}
   .specialist-page .bg-primary .items-baseline.justify-between{gap:12px;align-items:center}
   .specialist-page .bg-primary .items-baseline.justify-between>.text-headline-xl{white-space:nowrap}
@@ -1087,6 +1096,9 @@ section[id],h2[id],h3[id]{
   .home-work{
     gap:24px
   }
+  .home-work>img,.home-work .content-caption{
+    display:none
+  }
   .home-services h2,.home-specialties h2,.home-areas h2,.home-strengths h2,.home-work h2{
     font-size:26px
   }
@@ -1299,6 +1311,12 @@ section[id],h2[id],h3[id]{
 .header-home { display:none; }
 /* Compact home sections for narrow screens; desktop content stays complete. */
 @media(max-width:767px) {
+  .home-page :is(.home-services,.home-specialties,.home-areas,.home-work) { padding-block:26px; }
+  .home-page :is(.home-service-grid,.home-specialty-grid) { margin-top:16px; gap:8px; }
+  .home-page :is(.home-service-grid,.home-specialty-grid)>a { min-height:44px; padding:10px 14px; }
+  .home-page .home-areas>p,.home-page .home-work p { margin-top:12px; }
+  .home-page :is(.home-areas,.home-work) nav { margin-top:16px; gap:8px; }
+  .home-page :is(.home-areas,.home-work) nav a { padding:10px 14px; min-height:44px; }
   .home-page .home-quick,.home-page .home-metrics,.home-page .home-issues,.home-page .home-strengths { padding-block:26px; }
   .home-page .home-quick h2,.home-page .home-metrics h2,.home-page .home-issues h2,.home-page .home-strengths h2 { font-size:22px; line-height:1.4; letter-spacing:-.6px; }
   .home-quick-intro { margin-top:8px; font-size:14px; line-height:1.6; }
@@ -1416,8 +1434,176 @@ a.seoul-district-card:focus-visible { outline:2px solid var(--brand-color); outl
   .area-service-summary dt { margin-bottom:0; line-height:1.7; }
   .area-service-summary dd { font-size:15px; }
 }
+.cost-mobile-summary { display:none; }
+.faq-related-mobile { display:none; }
+/* 서비스 상세 페이지의 모바일 읽기 간격 */
+@media(max-width:767px) {
+  :is(.cost-guide-page,.faq-guide-page) nav.section-links[aria-label="청소 정보"],
+  .faq-guide-page .content-cta { display:none; }
+  .faq-guide-page .breadcrumbs { padding-block:16px; }
+  .faq-guide-page .content-hero { padding:8px 0 24px; }
+  .faq-guide-page .content-hero h1+p { margin-top:16px; }
+  .faq-guide-page .content-emphasis { margin-top:12px; }
+  .faq-guide-page .content-hero .content-actions { display:none; }
+  .faq-guide-page .section-links { padding-block:14px; gap:6px; }
+  .faq-guide-page .section-links a { padding:8px 12px; font-size:13px; }
+  .faq-guide-page .content-section { padding-block:28px; }
+  .faq-guide-page .content-section h2 { font-size:22px; }
+  .faq-guide-page .content-faq { padding-block:10px; }
+  .faq-guide-page .content-faq summary { gap:12px; }
+  .faq-guide-page .content-faq summary h3 { font-size:16px; line-height:1.5; }
+  .faq-guide-page .content-faq summary::after { flex-shrink:0; font-size:20px; }
+  .faq-guide-page .content-faq p { margin:10px 0 0; font-size:14px; line-height:1.7; }
+  .faq-guide-page .faq-related-table { display:none; }
+  .faq-guide-page .faq-related-mobile { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-top:16px; }
+  .faq-guide-page .faq-related-mobile a { display:flex; flex-direction:column; justify-content:center; min-height:68px; padding:12px; border:1px solid var(--card-border); background:var(--surface); text-decoration:none; }
+  .faq-guide-page .faq-related-mobile span { font-size:14px; font-weight:600; line-height:1.5; word-break:keep-all; }
+  .faq-guide-page .faq-related-mobile small { margin-top:4px; font-size:12px; line-height:1.5; color:var(--secondary); }
+  .cost-guide-page .cost-desktop-only { display:none; }
+  .cost-guide-page .cost-mobile-summary { display:block; }
+  .cost-guide-page dl.cost-mobile-summary { margin:16px 0; }
+  .cost-guide-page .cost-mobile-summary>div { display:grid; grid-template-columns:88px minmax(0,1fr); gap:12px; padding-block:12px; border-bottom:1px solid var(--divider); }
+  .cost-guide-page .cost-mobile-summary>div:first-child { border-top:1px solid var(--divider); }
+  .cost-guide-page .cost-mobile-summary dt { font-size:14px; font-weight:600; line-height:1.6; word-break:keep-all; }
+  .cost-guide-page .cost-mobile-summary dd { margin:0; font-size:14px; line-height:1.6; word-break:keep-all; overflow-wrap:anywhere; }
+  .cost-guide-page .cost-mobile-summary dd span { display:block; margin-top:4px; font-size:13px; color:var(--secondary); }
+  .cost-guide-page .cost-summary-note { font-size:13px; line-height:1.7; color:var(--ink); }
+  .change-page>div>section.py-space-xl { padding-block:32px; }
+  .cost-guide-page .mobile-compact-section article { gap:8px; }
+  .cost-guide-page .mobile-compact-section article h3,
+  .cost-guide-page .mobile-compact-section article p { margin:0; }
+  .cost-guide-page .mobile-compact-section .section-links { margin-block:16px 0; }
+  .change-page .replacement-hero-copy p { margin-top:16px; }
+  .change-page .gap-gutter { gap:16px; }
+  .change-page .mb-space-lg { margin-bottom:24px; }
+  .change-page :is(.p-space-md,.p-space-lg) { padding:20px; }
+  .change-page .mt-space-md { margin-top:16px; }
+  .change-page .pt-space-md { padding-top:16px; }
+  .change-page .replacement-signal-card .pb-space-sm,
+  .change-page #switch-process .pb-space-sm { padding-bottom:8px; }
+  .change-page .criterion-response { margin-top:16px; padding-top:16px; }
+  .change-page .criterion-response h4 { margin:0; }
+  .change-page .criterion-response p { margin-top:8px; }
+  .change-page .criterion-response a { margin-top:8px; }
+  .change-page .criterion-registration-note { margin-top:16px; }
+  .change-page .change-comparison-cards { gap:16px; }
+  .change-page .change-comparison-cards article { padding:20px; }
+  .change-page .change-comparison-cards h3 { margin-bottom:16px; }
+  .change-page .change-comparison-cards dl>div+div { margin-top:12px; padding-top:12px; }
+  .change-page .change-comparison-cards dt { margin-bottom:6px; }
+  .change-page :is(#comparison-table,#switch-process) .content-note { padding:16px; margin:16px 0 0; }
+  .change-page #comparison-table .content-note { margin-top:0; }
+  .change-page #replacement-faq .py-space-md { padding-block:18px; }
+  .change-page #replacement-consultation { display:none; }
+  .compact-area-page .area-hero { padding:24px 20px; }
+  .compact-area-page .area-eyebrow { margin-bottom:12px; }
+  .compact-area-page .area-hero .content-lead { margin-top:16px; line-height:1.8; }
+  .compact-area-page .area-service-summary { margin-top:20px; padding-top:16px; }
+  .compact-area-page .area-service-summary dl { margin-block:0; gap:12px; }
+  .compact-area-page .mobile-compact-section>h3 { margin-top:24px; margin-bottom:8px; }
+  .compact-area-page .mobile-compact-section .content-table { margin-block:16px; }
+  .compact-area-page .mobile-compact-section :is(th,td) { padding:14px 12px; }
+  .compact-area-page .mobile-compact-section .content-actions { margin-top:16px; gap:8px; }
+  .compact-area-page .mobile-compact-section .content-actions a { padding:10px 12px; }
+  :is(.dentistry-page,.obstetrics-page,.korean-medicine-page) .breadcrumbs { padding-block:16px; }
+  :is(.dentistry-page,.obstetrics-page,.korean-medicine-page) .content-hero { padding:8px 0 24px; gap:20px; }
+  :is(.dentistry-page,.obstetrics-page,.korean-medicine-page) .content-hero h1+p { margin-top:16px; }
+  :is(.dentistry-page,.obstetrics-page,.korean-medicine-page) .content-emphasis { margin-top:12px; }
+  :is(.dentistry-page,.obstetrics-page,.korean-medicine-page) .content-section:is(#cleaning-scope,#access-limits,#regular-care,#cleaning-cost,#service-area) { padding-block:32px; }
+  :is(.dentistry-page,.obstetrics-page,.korean-medicine-page) .content-section:is(#cleaning-scope,#access-limits,#regular-care,#cleaning-cost,#service-area) p { margin-block:12px; }
+  :is(.dentistry-page,.obstetrics-page,.korean-medicine-page) .content-section:is(#cleaning-scope,#access-limits,#regular-care,#cleaning-cost,#service-area)>:last-child { margin-bottom:0; }
+  :is(.dentistry-page,.obstetrics-page,.korean-medicine-page) :is(#access-limits,#regular-care) :is(ul,ol) { margin-block:16px; padding-left:22px; }
+  :is(.dentistry-page,.obstetrics-page,.korean-medicine-page) :is(#access-limits,#regular-care) li { padding-block:4px; }
+  :is(.dentistry-page,.obstetrics-page,.korean-medicine-page) #cleaning-scope .content-cards { margin-top:20px; gap:12px; }
+  :is(.dentistry-page,.obstetrics-page,.korean-medicine-page) #cleaning-scope article { padding:20px; }
+  :is(.dentistry-page,.obstetrics-page,.korean-medicine-page) #cleaning-scope article>:last-child { margin-bottom:0; }
+  :is(.dentistry-page,.obstetrics-page,.korean-medicine-page) #service-area .content-actions { margin-top:16px; gap:8px; }
+  :is(.dentistry-page,.obstetrics-page,.korean-medicine-page) #service-area .content-actions a { padding:10px 12px; }
+  :is(.dentistry-page,.obstetrics-page,.korean-medicine-page) .content-cta { display:none; }
+  :is(.dermatology-page,.plastic-surgery-page,.compact-area-page,.cost-guide-page) .breadcrumbs { padding-block:16px; }
+  :is(.dermatology-page,.plastic-surgery-page,.compact-area-page,.cost-guide-page) .content-hero { padding:8px 0 24px; gap:20px; }
+  :is(.dermatology-page,.plastic-surgery-page,.compact-area-page,.cost-guide-page) .content-hero h1+p { margin-top:16px; }
+  :is(.dermatology-page,.plastic-surgery-page,.compact-area-page,.cost-guide-page) .content-emphasis { margin-top:12px; }
+  :is(.dermatology-page,.plastic-surgery-page,.compact-area-page,.cost-guide-page) .mobile-compact-section { padding-block:32px; }
+  :is(.dermatology-page,.plastic-surgery-page,.compact-area-page,.cost-guide-page) .mobile-compact-section p { margin-block:12px; }
+  :is(.dermatology-page,.plastic-surgery-page,.compact-area-page,.cost-guide-page) .mobile-compact-section>:last-child { margin-bottom:0; }
+  :is(.dermatology-page,.plastic-surgery-page,.compact-area-page,.cost-guide-page) .mobile-compact-section :is(ul,ol) { margin-block:16px; padding-left:22px; }
+  :is(.dermatology-page,.plastic-surgery-page,.compact-area-page,.cost-guide-page) .mobile-compact-section li { padding-block:4px; }
+  :is(.dermatology-page,.plastic-surgery-page,.compact-area-page,.cost-guide-page) .mobile-compact-section .content-cards { gap:12px; margin-top:20px; }
+  :is(.dermatology-page,.plastic-surgery-page,.compact-area-page,.cost-guide-page) .mobile-compact-section article { padding:20px; }
+  :is(.dermatology-page,.plastic-surgery-page,.compact-area-page,.cost-guide-page) .mobile-compact-section article>:last-child { margin-bottom:0; }
+  :is(.dermatology-page,.plastic-surgery-page,.compact-area-page,.cost-guide-page) .content-cta { display:none; }
+  :is(.plastic-surgery-page,.cost-guide-page) .mobile-compact-section .content-table { margin-block:16px; }
+  :is(.plastic-surgery-page,.cost-guide-page) .mobile-compact-section :is(th,td) { padding:14px 12px; }
+  :is(.plastic-surgery-page,.cost-guide-page) .mobile-compact-section>h3 { margin-top:24px; margin-bottom:8px; }
+  .regular-cleaning-detail-page .breadcrumbs { padding-block:16px; }
+  .regular-cleaning-detail-page .content-hero { padding:8px 0 24px; gap:20px; }
+  .regular-cleaning-detail-page .content-hero h1+p { margin-top:16px; }
+  .regular-cleaning-detail-page .content-emphasis { margin-top:12px; }
+  :is(.regular-cleaning-detail-page,.area-detail-cleaning-page,.deep-cleaning-detail-page) .content-hero .content-actions,
+  :is(.regular-cleaning-detail-page,.area-detail-cleaning-page,.deep-cleaning-detail-page) .content-cta { display:none; }
+  .regular-cleaning-detail-page .content-section:is(.service-summary,#service-targets,#scope,#regular-cleaning,#process,#estimate,#service-area) { padding-block:32px; }
+  .regular-cleaning-detail-page .content-section:is(.service-summary,#service-targets,#scope,#regular-cleaning,#process,#estimate,#service-area) p { margin-block:12px; }
+  .regular-cleaning-detail-page .content-section:is(.service-summary,#service-targets,#scope,#regular-cleaning,#process,#estimate,#service-area)>:last-child { margin-bottom:0; }
+  .regular-cleaning-detail-page :is(#service-targets,#regular-cleaning,#service-area) ul { margin-block:16px; padding-left:22px; }
+  .regular-cleaning-detail-page :is(#service-targets,#regular-cleaning,#service-area) li { padding-block:4px; }
+  .regular-cleaning-detail-page .service-summary .content-cards { gap:12px; }
+  .regular-cleaning-detail-page .service-summary article { padding:20px; }
+  .regular-cleaning-detail-page .service-summary h2 { font-size:20px; }
+  .regular-cleaning-detail-page .service-summary article p { margin:10px 0 0; }
+  .regular-cleaning-detail-page #scope .content-table { margin-block:16px; }
+  .regular-cleaning-detail-page #scope :is(th,td) { padding:14px 12px; }
+  .area-detail-cleaning-page .breadcrumbs { padding-block:16px; }
+  .area-detail-cleaning-page .content-hero { padding:8px 0 24px; gap:20px; }
+  .area-detail-cleaning-page .content-hero h1+p { margin-top:16px; }
+  .area-detail-cleaning-page .content-emphasis { margin-top:12px; }
+  .area-detail-cleaning-page .content-section:is(.service-summary,#section-1,#section-2,#section-3,#section-4) { padding-block:32px; }
+  .area-detail-cleaning-page .content-section:is(.service-summary,#section-1,#section-2,#section-3,#section-4) p { margin-block:12px; }
+  .area-detail-cleaning-page .content-section:is(.service-summary,#section-1,#section-2,#section-3,#section-4)>:last-child { margin-bottom:0; }
+  .area-detail-cleaning-page :is(#section-1,#section-4) :is(ul,ol) { margin-block:16px; padding-left:22px; }
+  .area-detail-cleaning-page :is(#section-1,#section-4) li { padding-block:4px; }
+  .area-detail-cleaning-page :is(.service-summary,#section-2) .content-cards { gap:12px; }
+  .area-detail-cleaning-page #section-2 .content-cards { margin-top:20px; }
+  .area-detail-cleaning-page :is(.service-summary,#section-2) article { padding:20px; }
+  .area-detail-cleaning-page .service-summary h2 { font-size:20px; }
+  .area-detail-cleaning-page .service-summary article p { margin:10px 0 0; }
+  .area-detail-cleaning-page #section-2 article>:last-child { margin-bottom:0; }
+  .area-detail-cleaning-page #section-3 .content-table { margin-block:16px; }
+  .area-detail-cleaning-page #section-3 :is(th,td) { padding:14px 12px; }
+  .deep-cleaning-detail-page .breadcrumbs { padding-block:16px; }
+  .deep-cleaning-detail-page .content-hero { padding:8px 0 24px; gap:20px; }
+  .deep-cleaning-detail-page .content-hero h1+p { margin-top:16px; }
+  .deep-cleaning-detail-page .content-emphasis { margin-top:12px; }
+  .deep-cleaning-detail-page .content-section:is(.service-summary,#section-1,#section-2,#section-3,#section-4,#section-5) { padding-block:32px; }
+  .deep-cleaning-detail-page .content-section:is(.service-summary,#section-1,#section-2,#section-3,#section-4,#section-5) p { margin-block:12px; }
+  .deep-cleaning-detail-page .content-section:is(.service-summary,#section-1,#section-2,#section-3,#section-4,#section-5)>:last-child { margin-bottom:0; }
+  .deep-cleaning-detail-page :is(#section-1,#section-4) :is(ul,ol) { margin-block:16px; padding-left:22px; }
+  .deep-cleaning-detail-page :is(#section-1,#section-4) li { padding-block:4px; }
+  .deep-cleaning-detail-page :is(.service-summary,#section-2) .content-cards { gap:12px; }
+  .deep-cleaning-detail-page #section-2 .content-cards { margin-top:20px; }
+  .deep-cleaning-detail-page :is(.service-summary,#section-2) article { padding:20px; }
+  .deep-cleaning-detail-page .service-summary h2 { font-size:20px; }
+  .deep-cleaning-detail-page .service-summary article p { margin:10px 0 0; }
+  .deep-cleaning-detail-page #section-2 article>:last-child { margin-bottom:0; }
+  .deep-cleaning-detail-page #section-2 .content-note { margin-block:16px; padding:16px; }
+  .deep-cleaning-detail-page #section-3 .content-table { margin-block:16px; }
+  .deep-cleaning-detail-page #section-3 :is(th,td) { padding:14px 12px; }
+}
 .service-target-mobile-description { display:none; }
 @media(max-width:767px) {
+  .service-page :is(.service-target,#cleaning-scope,#service-process,#service-comparison) { padding-block:32px; }
+  .service-page .service-target { min-height:0; }
+  .service-page :is(.service-target,#cleaning-scope,#service-comparison) :is(.pb-12,.pb-14) { padding-bottom:24px; }
+  .service-page #cleaning-scope .grid { gap:16px; }
+  .service-page #cleaning-scope .p-6 { padding:20px; }
+  .service-page #service-process .process-intro { gap:16px; margin-bottom:24px; }
+  .service-page #service-process .process-steps li { grid-template-columns:40px minmax(0,1fr); gap:12px; padding-block:18px; }
+  .service-page #service-process .process-steps li:last-child { padding-bottom:0; }
+  .service-page #service-process .process-steps h3 { margin-bottom:8px; }
+  .service-page #service-comparison .service-comparison-mobile { gap:16px; }
+  .service-page #service-comparison .comparison-card { padding:20px; }
+  .service-page #service-comparison .comparison-card h3 { margin-bottom:16px; }
+  .service-page #service-comparison .comparison-card dl>div+div { margin-top:12px; padding-top:12px; }
   .service-tabs { display:none; }
   .service-target .service-target-desktop-description,
   .service-target .service-icon,
@@ -1431,4 +1617,11 @@ a.seoul-district-card:focus-visible { outline:2px solid var(--brand-color); outl
   .service-target .section-title-accessible { scroll-margin-top:100px; }
   .header-home { display:inline-flex; align-items:center; justify-content:center; width:44px; height:44px; border:1px solid var(--card-border); border-radius:50%; color:#182a38; }
   .header-home:focus-visible { outline:2px solid #20695c; outline-offset:4px; }
+}
+
+/* Mobile call actions show a label while keeping tap-to-call available. */
+.phone-mobile-label { display:none; }
+@media (max-width:767px) {
+  .phone-number { display:none; }
+  .phone-mobile-label { display:inline; }
 }

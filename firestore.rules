@@ -27,7 +27,9 @@ service cloud.firestore {
         && context.visitor is string && context.visitor.matches('^[a-f0-9-]{36}$')
         && context.session is string && context.session.matches('^[a-f0-9-]{36}$')
         && validAnalyticsSource(context.first) && validAnalyticsSource(context.source) && validAnalyticsSource(context.attributed)
-        && text(context.landing, 100) && context.landing.matches('^[a-z0-9.-]+[.]html$')
+        && text(context.landing, 140)
+        && (context.landing.matches('^([a-z0-9-]+/)?[a-z0-9.-]+[.]html$')
+          || context.landing.matches('^info/([a-z0-9]+(-[a-z0-9]+)*/)?$'))
         && context.device in ['mobile', 'desktop'];
     }
     match /estimate_requests/{requestId} {

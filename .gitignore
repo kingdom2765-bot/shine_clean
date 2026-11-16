@@ -8,4 +8,7 @@ firebase-debug.log*
 service-account*.json
 
 _site/
+exports/
 data/public-clients.json.tmp
+/info/
+/hospital-law/

@@ -1,3 +1,6 @@
+import { fileURLToPath } from 'node:url';
+import { infoOutputs } from '../scripts/info-build.mjs';
+import { lawOutputs } from '../scripts/law-build.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile, access } from 'node:fs/promises';
@@ -41,6 +44,21 @@ test('built pages contain accurate copy, approved metrics and crawlable twelve-c
     }
     titles.add(doc.title); descriptions.add(doc.querySelector('meta[name=description]').content);
     assert.ok(doc.querySelector('script[type="application/ld+json"]'));
+    const graph = JSON.parse(doc.querySelector('script[type="application/ld+json"]').textContent)['@graph'];
+    const business = graph.find(item => item['@id'] === `${siteConfig.siteUrl}#organization`);
+    assert.deepEqual(business['@type'], ['Organization', 'LocalBusiness']);
+    assert.equal(business.name, '원내케어');
+    assert.equal(business.legalName, '샤인크린환경');
+    assert.equal(business.telephone, siteConfig.telephone);
+    assert.equal(business.address.streetAddress, siteConfig.businessAddress);
+    for (const district of ['강남구', '서초구', '송파구', '강동구']) {
+      assert.ok(business.areaServed.some(area => area.name === `서울특별시 ${district}`), `${path}: serves ${district}`);
+    }
+    const service = graph.find(item => item['@type'] === 'Service');
+    if (service) {
+      assert.equal(service.provider['@id'], business['@id']);
+      assert.deepEqual(service.areaServed, business.areaServed);
+    }
   }
   assert.equal(titles.size, publicPages.length); assert.equal(descriptions.size, publicPages.length);
   const main = await readFile(new URL('../index.html', import.meta.url), 'utf8');
@@ -71,7 +89,11 @@ test('built pages contain accurate copy, approved metrics and crawlable twelve-c
   }
   const config = JSON.parse(await readFile(new URL('../site.config.json', import.meta.url), 'utf8'));
   const sitemap = new JSDOM(await readFile(new URL('../sitemap.xml', import.meta.url), 'utf8'), { contentType: 'application/xml' }).window.document;
-  assert.equal(sitemap.querySelectorAll('loc').length, publicPages.length + Math.ceil(clients.length / 12) - 1);
+  const contentRoot = fileURLToPath(new URL('../',import.meta.url));
+  const law = await lawOutputs(contentRoot,config);
+  assert.equal(sitemap.querySelectorAll('loc').length, publicPages.length + Math.ceil(clients.length / 12) - 1 + (await infoOutputs(contentRoot,config)).sitemap.length + 1 + law.sitemap.length);
+  for (const path of ['guide/',...law.sitemap]) assert.ok([...sitemap.querySelectorAll('loc')].some(loc=>loc.textContent===new URL(path,config.siteUrl).href));
+  assert.ok([...sitemap.querySelectorAll('loc')].some(loc => loc.textContent === new URL('info/', config.siteUrl).href));
   assert.ok([...sitemap.querySelectorAll('loc')].every(loc => loc.textContent.startsWith(config.siteUrl)));
   assert.doesNotMatch(sitemap.documentElement.outerHTML, /p6-admin|p7-clients/);
   const home = new JSDOM(main).window.document;
@@ -112,6 +134,21 @@ test('nested content pages preserve local links, assets, breadcrumbs and all pub
       await access(new URL(local, root));
       if (target.hash && documents.has(local)) assert.ok(documents.get(local).getElementById(target.hash.slice(1)), `${path}: ${value} resolves to a section`);
     }
+    if (path.startsWith('work/')) {
+      const record = JSON.parse(await readFile(new URL('../data/work-cases.json', import.meta.url), 'utf8')).find(item => item.path === path);
+      assert.ok(record);
+      assert.equal(doc.querySelectorAll('.work-story-photos img').length, path === 'work/jongno-obliv-clinic.html' ? 4 : 1);
+      assert.ok([...doc.querySelectorAll('.work-story-photos img')].every(image => image.alt && image.width && image.height));
+      assert.equal(doc.querySelector('meta[name=robots]'), null);
+      assert.ok(doc.querySelector('.work-story-back[href="../p3-our-work.html#work-records"]'));
+      assert.ok(doc.querySelector('.work-story-cta[href="../p5-estimate.html"]'));
+      const graph = JSON.parse(doc.querySelector('[type="application/ld+json"]').textContent)['@graph'];
+      assert.deepEqual(graph.find(item => item['@type'] === 'BreadcrumbList').itemListElement.map(item => item.name), ['홈', '병원청소 작업사례', record.name + ' 청소 사례']);
+      const listing = documents.get('p3-our-work.html');
+      assert.ok(listing.querySelector(`a[href="${path}"]`));
+      assert.equal(listing.querySelectorAll('[data-case]').length, 0);
+      continue;
+    }
     if (!path.includes('/')) continue;
     assert.equal(doc.querySelectorAll('.breadcrumbs [aria-current=page]').length, 1);
     assert.equal(doc.querySelectorAll('.section-links [aria-current=page]').length, 1);
@@ -121,6 +158,15 @@ test('nested content pages preserve local links, assets, breadcrumbs and all pub
     const graph = JSON.parse(doc.querySelector('[type="application/ld+json"]').textContent)['@graph'];
     const breadcrumb = graph.find(item => item['@type'] === 'BreadcrumbList');
     assert.equal(breadcrumb.itemListElement.at(-1).name, doc.querySelector('.breadcrumbs [aria-current=page]').textContent);
+    assert.deepEqual(breadcrumb.itemListElement.map(item => item.name), [...doc.querySelectorAll('.breadcrumbs a, .breadcrumbs [aria-current=page]')].map(node => node.textContent));
+    assert.equal(breadcrumb.itemListElement.length, path.startsWith('service/') ? 3 : 2);
+    for (const [index, item] of breadcrumb.itemListElement.entries()) {
+      assert.equal(item.position, index + 1);
+      assert.ok(item.item, `${path}: breadcrumb URL is required`);
+      const target = new URL(item.item);
+      const local = target.pathname.slice(1) || 'index.html';
+      await access(new URL(local, root));
+    }
   }
   const faq = documents.get('guide/faq.html');
   assert.equal(faq.querySelectorAll('details.content-faq').length, 14);

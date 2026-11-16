@@ -35,6 +35,8 @@ export const dayKey = time => new Date(Number(time) + 9 * 3600000).toISOString()
 export const dayStart = day => Date.parse(`${day}T00:00:00+09:00`);
 export const slug = value => /^[a-z0-9][a-z0-9_.-]{0,79}$/.test(String(value || '')) ? String(value) : '';
 export function safePage(value) {
+  const infoPath = String(value || '').split(/[?#]/)[0].replace(/^\//,'');
+  if (/^info\/(?:[a-z0-9]+(?:-[a-z0-9]+)*\/)?$/.test(infoPath) && infoPath.length<=140) return infoPath;
   const segments = String(value || '').split(/[?#]/)[0].split('/');
   const nested = segments.slice(-2).join('/');
   if (Object.hasOwn(pageLabels, nested)) return nested;

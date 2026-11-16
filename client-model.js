@@ -23,7 +23,11 @@ export function maskClientName(record) {
 }
 
 export function publicClientName(record) {
-  return typeof record.publicName === 'string' && record.publicName.trim() ? record.publicName : maskClientName(record);
+  return typeof record.publicName === 'string' && record.publicName.trim() ? record.publicName : actualClientName(record);
+}
+
+export function actualClientName(record) {
+  return String(record.cleanName || record.clientName || '').replace(/^\[폐업\]\s*/, '').trim();
 }
 
 export function filterClients(records, search, group) {

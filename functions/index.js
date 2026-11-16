@@ -6,6 +6,7 @@ import { onDocumentWritten } from 'firebase-functions/v2/firestore';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { defineSecret, defineString } from 'firebase-functions/params';
 import { timingSafeEqual, createHmac } from 'node:crypto';
+import { cloudEvent } from '@google-cloud/functions-framework';
 import { normalizedEvent, nextVisit, digest, pseudonym, range, makeReport, validateCost } from './lib/service.js';
 import { DAY, dayKey, safeSource, safePage, summarize, validDay, slug } from './lib/analytics-model.js';
 
@@ -13,7 +14,7 @@ initializeApp();
 const db = getFirestore();
 const hashKey = defineSecret('ANALYTICS_HASH_KEY');
 const webhookKey = defineSecret('ANALYTICS_CALL_WEBHOOK_KEY');
-const originSetting = defineString('ANALYTICS_ORIGINS', { default: 'https://kingdom2765-bot.github.io' });
+const originSetting = defineString('ANALYTICS_ORIGINS', { default: 'https://www.wonnaecare.co.kr' });
 const region = 'asia-northeast3';
 const owner = 'cOLPnjEzpgXYKdowCJcsKIf4xP73';
 const expiry = ms => Timestamp.fromMillis(ms);
@@ -70,11 +71,17 @@ function body(request) {
 export const analyticsApi = onRequest({ region, secrets: [hashKey], maxInstances: 3, timeoutSeconds: 120, memory: '256MiB', invoker: 'public' }, async (req, res) => {
   const origins = originSetting.value().split(',').map(v => v.trim()); const origin = req.headers.origin;
   if (!origin || !origins.includes(origin)) { res.status(403).json({ error: '허용되지 않은 출처입니다.' }); return; }
-  res.set('Access-Control-Allow-Origin', origin).set('Vary', 'Origin').set('Access-Control-Allow-Headers', 'Content-Type, Authorization').set('Access-Control-Allow-Methods', 'POST, OPTIONS').set('Cache-Control', 'no-store');
+  res.set('Access-Control-Allow-Origin', origin).set('Vary', 'Origin').set('Access-Control-Allow-Headers', 'Content-Type, Authorization').set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS').set('Cache-Control', 'no-store');
   if (req.method === 'OPTIONS') { res.status(204).send(''); return; }
-  if (req.method !== 'POST') { res.status(405).json({ error: 'POST 요청을 사용해 주세요.' }); return; }
+  const path = req.path.replace(/\/$/, '');
+  if (req.method !== 'POST' && !(req.method === 'GET' && path === '/health')) { res.status(405).json({ error: 'POST 요청을 사용해 주세요.' }); return; }
   try {
-    const input = body(req), now = Date.now(), path = req.path.replace(/\/$/, '');
+    if (req.method === 'GET' && path === '/health') {
+      // Check database access without creating a visit or exposing report data.
+      await collection('meta').doc('status').get();
+      res.json({ service: 'shine-analytics', ready: true }); return;
+    }
+    const input = body(req), now = Date.now();
     if (path === '/collect') {
       if (!Array.isArray(input.events) || !input.events.length || input.events.length > 10) throw new Error('이벤트 수를 확인해 주세요.');
       await limit(req, now);
@@ -124,6 +131,7 @@ export const analyticsApi = onRequest({ region, secrets: [hashKey], maxInstances
 
 // An estimate is counted only after Firestore confirms the write. No client-side success event is trusted.
 export const analyticsEstimate = onDocumentWritten({ document: 'estimate_requests/{requestId}', region, secrets: [hashKey], retry: true }, async event => {
+  if (!event.params?.requestId) throw new Error('견적 이벤트의 문서 식별자가 없습니다. CloudEvent 진입점을 확인해 주세요.');
   const ref = collection('conversions').doc(`estimate_${event.params.requestId}`);
   // Re-read current state so out-of-order/retried triggers cannot overwrite a newer status or resurrect a deleted request.
   await db.runTransaction(async tx => {
@@ -149,6 +157,10 @@ export const analyticsEstimate = onDocumentWritten({ document: 'estimate_request
     tx.set(ref, conversion);
   });
 });
+
+// gcloud deployments must register this signature explicitly. Otherwise the
+// framework can pass legacy event data without the CloudEvent document path.
+cloudEvent('analyticsEstimate', analyticsEstimate);
 
 // Provider-neutral actual-call adapter. Only verified, signed provider events are accepted.
 export const analyticsCallWebhook = onRequest({ region, secrets: [webhookKey], maxInstances: 2 }, async (req, res) => {

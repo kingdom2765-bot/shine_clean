@@ -12,7 +12,7 @@ async function synthetic(context, values) { const module = new vm.SyntheticModul
 async function collector(options = {}) {
   const dom = new JSDOM('<body><a id="phone" href="tel:1661-2816">전화</a><footer></footer></body>', { url: 'https://shine.test/index.html?utm_source=naver&utm_medium=cpc&utm_campaign=gangnam', referrer: 'https://search.naver.com/' });
   const requests = [], timers = [];
-  const config = { enabled: true, endpoint: 'https://api.test', privacyVersion: 'test', siteUrl: 'https://shine.test/' };
+  const config = { enabled: true, endpoint: 'https://api.test', privacyVersion: 'test', siteUrl: 'https://shine.test/', ...options.config };
   if (options.consent) dom.window.localStorage.setItem('shine.analytics.consent', JSON.stringify({ accepted: true, version: 'test' }));
   if (options.legacy) { dom.window.localStorage.setItem('shine.analytics.v1', JSON.stringify({ visitor: 'legacy-id' })); dom.window.localStorage.setItem('shine.analytics.consent', JSON.stringify({ accepted: false })); }
   if (options.visit) dom.window.sessionStorage.setItem('shine.analytics.visit.v2', JSON.stringify(options.visit));
@@ -53,13 +53,25 @@ test('active tab visit survives page navigation but expires after 30 minutes and
 test('internal visitor exclusion and DNT suppress automatic collection', async () => {
   for (const options of [{ consent: true, internal: true }, { consent: true, dnt: true }]) { const app = await collector(options); assert.equal(app.requests.length, 0); assert.equal(app.module.namespace.estimateContext(), null); app.dom.window.close(); }
 });
+
+test('disabled or unconfigured collectors never send events or attach estimate attribution', async () => {
+  for (const config of [{ enabled: false }, { endpoint: '' }]) {
+    const app = await collector({ config });
+    assert.equal(app.requests.length, 0);
+    assert.equal(app.module.namespace.estimateContext(), null);
+    app.dom.window.document.querySelector('#phone').click();
+    await tick();
+    assert.equal(app.requests.length, 0);
+    app.dom.window.close();
+  }
+});
 async function dashboard(options = {}) {
   const dom = new JSDOM(await readFile(new URL('../pages/p8-analytics.html', import.meta.url), 'utf8'), { url: 'https://shine.test/p8-analytics.html' });
   const requests = []; let fail = false, release;
   const day = model.dayKey(Date.now()), source = { channel: 'naver:cpc', campaign: 'gangnam', content: '', term: '' };
   const report = { ...makeReport([{ visitor: 'a', session: 's', day, source, device: 'mobile', landing: '<img src=x onerror=alert(1)>', views: 2, phoneClicks: 1, positions: { header: 1 }, pages: {}, returning: false, startedAt: Date.now(), updatedAt: Date.now() }], [], [], {}, {}, Date.now()), from: day, to: day, status: {} };
   const context = vm.createContext({ document: dom.window.document, window: dom.window, localStorage: dom.window.localStorage, navigator: { clipboard: { writeText: async () => {} } }, crypto: webcrypto, URL, Blob, Date, Intl, console, setTimeout, fetch: async (url, request) => { const path = new URL(url).pathname; requests.push({ path, input: JSON.parse(request.body), authorization: request.headers.Authorization }); if (fail) throw new Error('가상 네트워크 오류'); if (options.deferred && path === '/report') await new Promise(resolve => { release = resolve; }); return { ok: true, json: async () => path === '/report' ? report : { platformApis: 'not-connected', saved: 1 } }; } });
-  const modules = { './analytics-config.js': await synthetic(context, { analyticsConfig: { enabled: true, endpoint: options.disconnected ? '' : 'https://api.test', siteUrl: 'https://shine.test/' } }), './analytics-model.js': await synthetic(context, model) };
+  const modules = { './analytics-config.js': await synthetic(context, { analyticsConfig: { enabled: true, endpoint: options.disconnected ? '' : 'https://api.test', siteUrl: options.siteUrl || 'https://shine.test/' } }), './analytics-model.js': await synthetic(context, model) };
   const module = new vm.SourceTextModule(await readFile(new URL('../analytics-admin.js', import.meta.url), 'utf8'), { context }); await module.link(name => modules[name]); await module.evaluate();
   const manager = module.namespace.createAnalyticsManager();
   return { dom, requests, manager, login: () => manager.login({ getIdToken: async () => 'admin-token' }), fail: () => { fail = true; }, release: () => release?.(), submit: id => dom.window.document.querySelector(id).dispatchEvent(new dom.window.Event('submit', { cancelable: true })) };
@@ -81,4 +93,23 @@ test('in-flight report cannot repopulate private data after logout', async () =>
 });
 test('unconfigured server shows a clear disconnected state and makes no API calls', async () => {
   const app = await dashboard({ disconnected: true }); await app.login(); assert.equal(app.requests.length, 0); assert.match(app.dom.window.document.querySelector('#analytics-connection').textContent, /미연결/); app.dom.window.close();
+});
+
+test('tracking links use the current production domain and reject the former hosting domain', async () => {
+  const app = await dashboard({ disconnected: true, siteUrl: 'https://www.wonnaecare.co.kr/' });
+  await app.login();
+  const doc = app.dom.window.document;
+  assert.equal(doc.querySelector('#link-url').value, 'https://www.wonnaecare.co.kr/');
+  doc.querySelector('#link-campaign').value = 'gangnam';
+  doc.querySelector('#link-url').value = 'https://www.wonnaecare.co.kr/clinic/plastic-surgery.html';
+  app.submit('#analytics-link-form');
+  const url = new URL(doc.querySelector('#link-result').textContent);
+  assert.equal(url.origin, 'https://www.wonnaecare.co.kr');
+  assert.equal(url.pathname, '/clinic/plastic-surgery.html');
+  assert.equal(url.searchParams.get('utm_campaign'), 'gangnam');
+  doc.querySelector('#link-url').value = 'https://kingdom2765-bot.github.io/shine_clean/';
+  app.submit('#analytics-link-form');
+  assert.equal(doc.querySelector('#link-copy').disabled, true);
+  assert.match(doc.querySelector('#link-result').textContent, /현재 홈페이지/);
+  app.dom.window.close();
 });

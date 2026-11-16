@@ -99,12 +99,12 @@ test('initial classification uses business type and category and preserves manua
 });
 
 
-test('external names mask brand letters, retain clinic suffixes and preserve reviewed names', () => {
+test('legacy masking stays available; public defaults use actual business names and preserve reviewed names', () => {
   for (const [name, expected] of [['뮤즈의원', '뮤*의원'], ['봄의원', '*의원'], ['가나다라피부과의원', '가**라피부과의원'], ['(주)샤인크린', '(주)샤**린'], ['[폐업]뮤즈의원', '뮤*의원']]) {
     assert.equal(maskClientName({ clientName: name }), expected);
   }
   assert.equal(publicClientName({ cleanName: '뮤즈의원', publicName: '검토한 표기' }), '검토한 표기');
-  assert.equal(publicClientName({ cleanName: '뮤즈의원' }), '뮤*의원');
+  assert.equal(publicClientName({ cleanName: '뮤즈의원' }), '뮤즈의원');
   assert.equal(maskClientName({ cleanName: '르치과' }), '*치과');
   assert.equal(maskClientName({ cleanName: '신통정형외과' }), '신*정형외과');
   assert.equal(maskClientName({ cleanName: '메이스클리닉' }), '메*스클리닉');
@@ -124,7 +124,7 @@ test('new registration suggests editable names and groups, prevents duplicates, 
   await app.manager.login({ uid: 'admin' });
   app.click('#client-new'); assert.equal($('#client-detail').open, true); assert.equal($('#client-new-number').required, true);
   const input = (selector, value, type = 'input') => { $(selector).value = value; $(selector).dispatchEvent(new app.dom.window.Event(type, { bubbles: true })); };
-  input('#client-name', '뮤즈의원'); assert.equal($('#client-public-name').value, '뮤*의원');
+  input('#client-name', '뮤즈의원'); assert.equal($('#client-public-name').value, '뮤즈의원');
   input('#client-type', '보건업'); assert.equal($('#client-group').value, '병원');
   input('#client-public-name', '검토한 이름'); input('#client-name', '다른의원'); assert.equal($('#client-public-name').value, '검토한 이름');
   input('#client-group', '사무실', 'change'); input('#client-category', '의원'); assert.equal($('#client-group').value, '사무실');

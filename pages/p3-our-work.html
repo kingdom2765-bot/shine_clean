@@ -1,7 +1,7 @@
-<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="원내케어에 등록된 병원·사무실 거래처의 지역과 종목을 확인하세요. 거래처명은 일부 가려 표시하며, 공간별 작업 이미지는 현재 예시 자료입니다."><meta name="theme-color" content="#fbf9f4"><title>병원청소 작업사례·거래처 소개 | 원내케어</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"><link rel="stylesheet" crossorigin="" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css"><link rel="stylesheet" href="design-tokens.css"><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="work.css"><link rel="stylesheet" href="motion.css"></head><body data-page="p3-our-work" class="bg-background font-body-md text-on-surface antialiased selection:bg-secondary-container selection:text-on-secondary-container">{{header}}
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="원내케어에 등록된 병원·사무실 거래처의 지역과 종목을 확인하세요. 등록된 실제 업체와 현장 사진을 바탕으로 병원청소 작업사례를 소개합니다."><meta name="theme-color" content="#fbf9f4"><title>병원청소 작업사례·거래처 소개 | 원내케어</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"><link rel="stylesheet" crossorigin="" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css"><link rel="stylesheet" href="design-tokens.css"><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="work.css"><link rel="stylesheet" href="motion.css"></head><body data-page="p3-our-work" class="bg-background font-body-md text-on-surface antialiased selection:bg-secondary-container selection:text-on-secondary-container">{{header}}
 <main id="main" class="work-page pt-20">
 <section class="work-hero work-container">
-  <div><span class="eyebrow">OUR WORK · FIELD ARCHIVE</span><h1>병원청소 거래처와<br>공간별 작업사례</h1><p>공개 등록 거래처의 지역과 종목을 확인하세요. 공간별 관리 포인트는 예시 이미지와 함께 안내합니다.</p><div class="work-jumps"><a href="#client-directory">거래처 목록 ↓</a><a href="#case-gallery">작업 이미지 보기 ↓</a></div></div>
+  <div><span class="eyebrow">OUR WORK · FIELD ARCHIVE</span><h1>병원청소 거래처와<br>공간별 작업사례</h1><div class="work-jumps"><a href="#client-directory">거래처 목록 ↓</a><a href="#case-gallery">작업사례 보기 ↓</a></div></div>
   <div class="work-hero-index"><span>OUR CLIENTS</span><div><strong id="work-client-total">{{clientCount}}</strong><span>전체 등록 거래처</span></div></div>
 </section><nav class="section-links existing-section-links" aria-label="거래처·작업 기록"><a href="#clients">병원청소 실적</a><a href="#work-records">병원청소 작업사례</a></nav>
 <section class="work-directory py-space-xl" id="client-directory" aria-labelledby="directory-title"><span id="clients" class="section-anchor"></span>
@@ -21,11 +21,10 @@
 </section>
 <section class="work-gallery py-space-xl" id="case-gallery" aria-labelledby="gallery-title"><span id="work-records" class="section-anchor"></span>
  <div class="work-container">
-  <div class="work-section-heading"><div><span class="eyebrow">02. CLEANING JOURNAL</span><h2 id="gallery-title">병원청소 사례</h2></div></div><p class="content-note">현재는 실제 작업 사진이 아닌 예시 이미지로 청소 구역과 관리 항목을 안내합니다.</p>
+  <div class="work-section-heading"><div><span class="eyebrow">02. CLEANING JOURNAL</span><h2 id="gallery-title">병원청소 사례</h2></div></div>
   <div class="work-case-grid">{{cases}}</div>
  </div>
 </section>
 </main>
-<dialog id="case-dialog" class="case-dialog" aria-labelledby="case-title"><button class="case-close dialog-close" aria-label="작업 기록 닫기">×</button><div id="case-body"></div></dialog>
 {{footer}}{{dialog}}<script id="public-client-data" type="application/json">{{publicClientData}}</script><script src="app.js" defer=""></script><script src="motion.js" defer=""></script><script src="work.js" type="module"></script>
 </body></html>

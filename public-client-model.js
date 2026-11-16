@@ -1,4 +1,4 @@
-// The public projection must never fall back to the original client name or IDs.
+// Only the four approved public fields are projected; publicName contains the actual business name.
 export const clientPageSize = 12;
 export const clientPagePath = page => page === 1 ? 'p3-our-work.html' : `p3-our-work-page-${page}.html`;
 export function toPublicClient(record) {

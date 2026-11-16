@@ -1,4 +1,4 @@
-import { filterClients, clientChanges, clientGroup, publicClientName, newClient, maskClientName, inferClientGroup } from './client-model.js';
+import { filterClients, clientChanges, clientGroup, publicClientName, newClient, actualClientName, inferClientGroup } from './client-model.js';
 import { toPublicClient } from './public-client-model.js';
 
 export function createClientManager({ sdk, db }) {
@@ -106,7 +106,7 @@ export function createClientManager({ sdk, db }) {
   $('#client-new').addEventListener('click', openNew);
   $('#client-public-name').addEventListener('input', () => { if (creating) manualPublicName = true; });
   $('#client-group').addEventListener('change', () => { if (creating) manualGroup = true; });
-  $('#client-name').addEventListener('input', () => { if (creating && !manualPublicName) form.elements.namedItem('publicName').value = form.elements.namedItem('cleanName').value.trim() ? maskClientName({ cleanName: form.elements.namedItem('cleanName').value }) : ''; });
+  $('#client-name').addEventListener('input', () => { if (creating && !manualPublicName) form.elements.namedItem('publicName').value = actualClientName({ cleanName: form.elements.namedItem('cleanName').value }); });
   for (const key of ['businessType', 'category']) form.elements.namedItem(key).addEventListener('input', () => {
     if (creating && !manualGroup) form.elements.namedItem('clientGroup').value = inferClientGroup({ businessType: form.elements.namedItem('businessType').value, category: form.elements.namedItem('category').value });
   });

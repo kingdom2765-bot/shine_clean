@@ -2,7 +2,7 @@ import { analyticsConfig as config } from './analytics-config.js';
 import { classify, SESSION_MS, safePage, safeSource, paidChannels } from './analytics-model.js';
 
 const KEY = 'shine.analytics.visit.v2';
-let state, lastPhone = 0, pending = [], sending = false, retryTimer;
+let state, lastPhone = 0, lastEstimateLink = 0, pending = [], sending = false, retryTimer;
 // No persistent visitor identifier or consent dialog. Keep only this tab's active visit.
 try { localStorage.removeItem('shine.analytics.v1'); localStorage.removeItem('shine.analytics.consent'); } catch { /* unavailable */ }
 const storage = { get() { try { return JSON.parse(sessionStorage.getItem(KEY)); } catch { return null; } }, set(value) { try { sessionStorage.setItem(KEY, JSON.stringify(value)); } catch { /* page-memory fallback */ } } };
@@ -47,6 +47,9 @@ function track(type, position = '') {
 if (!disabledPage && config.enabled && config.endpoint) {
   track('page');
   document.addEventListener('click', event => {
+    if (event.target.closest('a[data-info-estimate]') && Date.now()-lastEstimateLink>=1500) {
+      lastEstimateLink=Date.now(); track('estimate_link','body');
+    }
     const link = event.target.closest('a[href^="tel:"]'); if (!link || Date.now() - lastPhone < 1500) return;
     lastPhone = Date.now(); const position = link.closest('header') ? 'header' : link.closest('footer') ? 'footer' : link.closest('dialog') ? 'dialog' : 'body'; track('phone', position);
   });

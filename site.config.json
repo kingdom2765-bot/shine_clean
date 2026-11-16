@@ -1,10 +1,15 @@
 {
   "siteUrl": "https://www.wonnaecare.co.kr/",
   "businessName": "원내케어",
-  "telephone": "+82-1661-2816",
+  "googleAdsTagId": "AW-950149804",
+  "telephone": "+821087813412",
   "serviceAreas": [
     "서울",
-    "경기"
+    "경기",
+    "서울특별시 강남구",
+    "서울특별시 서초구",
+    "서울특별시 송파구",
+    "서울특별시 강동구"
   ],
   "businessNumber": "742-77-00222",
   "representativeName": "권경숙",
