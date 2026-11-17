@@ -21,6 +21,35 @@ const performanceRow = r => [r.label, number(r.visitors), number(r.sessions), nu
 
 export function createAnalyticsManager() {
   let user, generation = 0, report, busy = false, reportRequest = 0, generatedLink = '';
+  let savedLinks = [], linkRequest = 0;
+  function renderLinks() {
+    const query = $('#link-search').value.trim().toLowerCase();
+    const rows = savedLinks.filter(row => [row.title, row.url, row.link, channelLabels[row.source.channel], ...Object.values(row.source)].join(' ').toLowerCase().includes(query));
+    table('#analytics-links', ['게시물·관리 이름', '유입 경로', '캠페인', '소재·게시물', '키워드', '연결 페이지·추적 링크', '생성일', '사용'], rows.map(row => {
+      const actions = el('div', undefined, 'analytics-actions'), copy = el('button', '링크 복사', 'admin-button secondary'), reuse = el('button', '불러오기', 'admin-text-button');
+      copy.type = reuse.type = 'button';
+      copy.addEventListener('click', async () => {
+        const current = generation;
+        try { await navigator.clipboard.writeText(row.link); if (current === generation) $('#link-list-status').textContent = `복사했습니다. ${row.title || row.source.content || row.source.campaign}`; }
+        catch { if (current === generation) $('#link-list-status').textContent = `주소를 선택해 복사해 주세요: ${row.link}`; }
+      });
+      reuse.addEventListener('click', () => {
+        $('#link-title').value = row.title; $('#link-url').value = row.url;
+        for (const key of ['channel', 'campaign', 'content', 'term']) $(`#link-${key}`).value = row.source[key];
+        generatedLink = row.link; $('#link-result').textContent = row.link; $('#link-copy').disabled = false; $('#link-title').focus();
+      });
+      actions.append(copy, reuse);
+      const address = el('div', undefined, 'analytics-saved-address'); address.append(el('div', row.url), el('small', row.link));
+      return [row.title || '이름 미지정', channelLabels[row.source.channel], row.source.campaign, row.source.content || '미지정', row.source.term || '미지정', address, dayKey(row.createdAt), actions];
+    }));
+    $('#link-list-status').textContent = `저장 ${savedLinks.length}개 · 검색 결과 ${rows.length}개`;
+  }
+  async function loadLinks() {
+    const current = generation, request = ++linkRequest;
+    $('#link-list-status').textContent = '저장한 링크를 불러오고 있습니다…';
+    try { const data = await api('/links/list'); if (current === generation && request === linkRequest) { savedLinks = data.rows || []; renderLinks(); } }
+    catch (error) { if (current === generation && request === linkRequest) $('#link-list-status').textContent = `저장 목록 조회 실패: ${error.message}`; }
+  }
   async function api(path, values = {}) {
     if (!user) throw new Error('관리자 로그인을 확인해 주세요.');
     if (!config.endpoint) throw new Error('방문 분석 서버 연결이 필요합니다. ANALYTICS.md의 배포 절차를 확인해 주세요.');
@@ -94,7 +123,24 @@ export function createAnalyticsManager() {
   $('#analytics-filter-form').addEventListener('submit', event => { event.preventDefault(); if (!busy) void load(); });
   $('#analytics-export').addEventListener('click', () => { if (report) download(`shine-analytics-${report.from}-${report.to}.csv`, [performanceHeaders, ...report.channels.map(performanceRow), ...report.campaigns.map(performanceRow)]); });
   $('#analytics-conversions-export').addEventListener('click', () => { if (report) download(`shine-conversions-${report.from}.csv`, [['from', 'to', 'channel', 'campaign', 'estimates', 'actual_calls', 'qualified', 'contracts'], ...report.campaigns.map(r => [report.from, report.to, r.key.split('|')[1], r.key.split('|')[2], r.estimates, r.calls, r.qualified, r.contracts])]); });
-  $('#analytics-link-form').addEventListener('submit', event => { event.preventDefault(); try { const url = new URL($('#link-url').value), site = new URL(config.siteUrl); if (url.origin !== site.origin || !url.pathname.startsWith(site.pathname)) throw new Error('현재 홈페이지 안의 연결 주소를 입력해 주세요.'); generatedLink = buildLink(url, { channel: $('#link-channel').value, campaign: $('#link-campaign').value.trim(), content: $('#link-content').value.trim(), term: $('#link-term').value.trim() }); $('#link-result').textContent = generatedLink; $('#link-copy').disabled = false; } catch (error) { generatedLink = ''; $('#link-copy').disabled = true; $('#link-result').textContent = error.message; } });
+  $('#analytics-link-form').addEventListener('submit', async event => {
+    event.preventDefault(); const current = generation, button = event.currentTarget.querySelector('button'); if (button.disabled) return;
+    generatedLink = ''; $('#link-copy').disabled = true; button.disabled = true; $('#link-result').textContent = '링크를 저장하고 있습니다…';
+    try {
+      const url = new URL($('#link-url').value), site = new URL(config.siteUrl);
+      if (url.origin !== site.origin || !url.pathname.startsWith(site.pathname)) throw new Error('현재 홈페이지 안의 연결 주소를 입력해 주세요.');
+      const source = { channel: $('#link-channel').value, campaign: $('#link-campaign').value.trim(), content: $('#link-content').value.trim(), term: $('#link-term').value.trim() };
+      buildLink(url, source);
+      const data = await api('/links/save', { title: $('#link-title').value.trim(), url: url.href, source });
+      if (current !== generation) return;
+      generatedLink = data.row.link; $('#link-copy').disabled = false;
+      $('#link-result').textContent = `${data.duplicate ? '이미 저장된 링크입니다. 기존 링크를 사용하세요.' : '링크를 저장했습니다.'} ${generatedLink}`;
+      await loadLinks();
+    } catch (error) { if (current === generation) { generatedLink = ''; $('#link-copy').disabled = true; $('#link-result').textContent = `링크 저장 실패: ${error.message}`; } }
+    finally { if (current === generation) button.disabled = false; }
+  });
+  $('#link-search').addEventListener('input', renderLinks);
+  $('#link-refresh').addEventListener('click', loadLinks);
   $('#link-copy').addEventListener('click', async () => { try { await navigator.clipboard.writeText(generatedLink); $('#link-result').textContent = `복사했습니다. ${generatedLink}`; } catch { $('#link-result').textContent = `주소를 선택해 복사해 주세요: ${generatedLink}`; } });
   async function saveCosts(rows) { const result = await api('/costs', { rows }); $('#cost-status').textContent = `${result.saved}행을 저장했습니다.`; await load(); }
   function formAction(id, feedback, handler) { $(id).addEventListener('submit', async event => { event.preventDefault(); const button = $(id).querySelector('button'); if (button.disabled) return; const current = generation; button.disabled = true; $(feedback).textContent = '저장 중입니다…'; try { await handler(); } catch (error) { if (current === generation) $(feedback).textContent = error.message; } finally { button.disabled = false; } }); }
@@ -105,7 +151,7 @@ export function createAnalyticsManager() {
   $('#call-new').addEventListener('click', () => { $('#analytics-call-form').reset(); $('#call-id').value = crypto.randomUUID(); $('#call-day').value = dayKey(Date.now()); $('#call-channel').value = 'direct:none'; });
   formAction('#analytics-history-form', '#history-status', async () => { const data = await api('/history', { from: $('#history-from').value, to: $('#history-to').value }); table('#analytics-history', ['날짜', '방문 단위·일', '방문', '전화 클릭 방문·일', '견적', '유효 문의', '계약'], data.rows.map(r => [r.day, number(r.total.visitors), number(r.total.sessions), number(r.total.phoneVisitors), number(r.total.estimates), number(r.total.qualified), number(r.total.contracts)])); $('#history-status').textContent = `${data.rows.length}일의 익명 집계를 불러왔습니다.`; });
   return {
-    async login(nextUser) { user = nextUser; generation++; $('#admin-notice').textContent = '방문·광고 분석 관리자로 로그인했습니다.'; if (!config.endpoint) { $('#analytics-connection').textContent = '분석 서버 미연결 · 추적 링크 생성은 이용할 수 있습니다. 서버 배포 후 analytics-config.js의 endpoint와 enabled 설정이 필요합니다.'; $('#analytics-integrations').textContent = '방문 수집·실제 통화 연동·광고 플랫폼 API: 연결 전'; return; } await load(); try { const status = await api('/integrations'); $('#analytics-integrations').textContent = `방문 수집: ${config.enabled ? '활성' : '중지'} · 광고비: 수동 입력·CSV · 실제 통화: 수동 기록·서명 웹훅 · 광고 플랫폼 API: ${status.platformApis === 'not-connected' ? '미연결' : '연결'} · 전환 자료: 관리용 CSV 내보내기`; } catch (error) { $('#analytics-integrations').textContent = error.message; } },
-    clear() { generation++; reportRequest++; user = undefined; report = undefined; busy = false; $('#analytics-refresh').disabled = false; for (const id of ['#analytics-stats', '#analytics-trend', '#analytics-channels', '#analytics-campaigns', '#analytics-pages', '#analytics-contents', '#analytics-terms', '#analytics-suspicious', '#analytics-calls', '#analytics-costs', '#analytics-history']) $(id).replaceChildren(); for (const id of ['#analytics-connection', '#analytics-integrations', '#analytics-positions', '#analytics-strategy', '#call-feedback', '#history-status', '#cost-status']) $(id).textContent = ''; $('#analytics-export').disabled = $('#analytics-conversions-export').disabled = true; $('#call-note').value = ''; },
+    async login(nextUser) { user = nextUser; generation++; $('#admin-notice').textContent = '방문·광고 분석 관리자로 로그인했습니다.'; if (!config.endpoint) { $('#analytics-connection').textContent = '분석 서버 미연결 · 링크 저장·조회는 이용할 수 없습니다. 서버 배포 후 analytics-config.js의 endpoint와 enabled 설정이 필요합니다.'; $('#analytics-integrations').textContent = '방문 수집·실제 통화 연동·광고 플랫폼 API: 연결 전'; return; } await Promise.all([load(), loadLinks()]); try { const status = await api('/integrations'); $('#analytics-integrations').textContent = `방문 수집: ${config.enabled ? '활성' : '중지'} · 광고비: 수동 입력·CSV · 실제 통화: 수동 기록·서명 웹훅 · 광고 플랫폼 API: ${status.platformApis === 'not-connected' ? '미연결' : '연결'} · 전환 자료: 관리용 CSV 내보내기`; } catch (error) { $('#analytics-integrations').textContent = error.message; } },
+    clear() { generation++; reportRequest++; linkRequest++; savedLinks = []; generatedLink = ''; $('#analytics-links').replaceChildren(); $('#link-list-status').textContent = ''; $('#link-result').textContent = ''; $('#link-search').value = ''; $('#analytics-link-form').reset(); $('#link-url').value = config.siteUrl; $('#link-copy').disabled = true; $('#analytics-link-form button').disabled = false; user = undefined; report = undefined; busy = false; $('#analytics-refresh').disabled = false; for (const id of ['#analytics-stats', '#analytics-trend', '#analytics-channels', '#analytics-campaigns', '#analytics-pages', '#analytics-contents', '#analytics-terms', '#analytics-suspicious', '#analytics-calls', '#analytics-costs', '#analytics-history']) $(id).replaceChildren(); for (const id of ['#analytics-connection', '#analytics-integrations', '#analytics-positions', '#analytics-strategy', '#call-feedback', '#history-status', '#cost-status']) $(id).textContent = ''; $('#analytics-export').disabled = $('#analytics-conversions-export').disabled = true; $('#call-note').value = ''; },
   };
 }
