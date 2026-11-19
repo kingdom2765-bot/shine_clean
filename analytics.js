@@ -19,7 +19,7 @@ const internal = () => {
   try { return JSON.parse(sessionStorage.getItem('shine.analytics.internal')) === true; } catch { return false; }
 };
 const allowed = () => config.enabled && config.endpoint && !navigator.globalPrivacyControl && navigator.doNotTrack !== '1' && !internal();
-const disabledPage = /p[678]-|auth-action/.test(location.pathname) || ['localhost', '127.0.0.1'].includes(location.hostname) || navigator.webdriver;
+const disabledPage = /p[678]-|auth-action/.test(location.pathname) || ['localhost', '127.0.0.1'].includes(location.hostname) || navigator.webdriver || /Google-InspectionTool/i.test(navigator.userAgent || '');
 function context() {
   const now = Date.now(); let previous = state || storage.get();
   if (previous && (!/^[a-f0-9-]{36}$/.test(previous.session || '') || !Number.isFinite(previous.last) || now - previous.last >= SESSION_MS || now < previous.last)) previous = null;
